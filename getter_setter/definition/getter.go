@@ -1,22 +1,14 @@
 package definition
 
-import gs "github.com/marcos-dev88/go-getter-setter/getter_setter"
+type (
+	ExtensionDefinitionGet interface {
+		GetFunctionByExtension() []byte
+	}
 
-type ExtensionDefinition interface {
-	GetFunctionByExtension() []byte
-}
-
-type FunctionDefinition interface {
-	GettersPhp() ([]byte, error)
-}
-
-type Definition struct {
-	File gs.File
-}
-
-func NewDefinition(file gs.File) Definition {
-	return Definition{File: file}
-}
+	FunctionDefinitionGet interface {
+		GettersPhp() ([]byte, error)
+	}
+)
 
 func (d Definition) GettersPhp() ([]byte, error) {
 
