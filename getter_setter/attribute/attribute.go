@@ -11,10 +11,11 @@ type AttributeConfig interface {
 
 type Attribute struct {
 	Name string `json:"name"`
+	Type string `json:"type"`
 }
 
-func NewAttribute(Name string) Attribute {
-	return Attribute{Name: Name}
+func NewAttribute(Name string, Type string) Attribute {
+	return Attribute{Name: Name, Type: Type}
 }
 
 func (a Attribute) Format() (string, error) {
