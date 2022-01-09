@@ -21,7 +21,7 @@ var fileEntityMock = gs.NewFile("some/path", "php", "private", attrs)
 var fileMock = fileMockTest{fileEntityMock}
 
 type definitionMock struct {
-	FunctionDefinition
+	FunctionDefinitionGet
 }
 
 var definitionEntityMock = NewDefinition(fileEntityMock)
