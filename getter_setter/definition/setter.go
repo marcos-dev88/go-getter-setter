@@ -3,22 +3,24 @@ package definition
 import (
 	"fmt"
 	"strings"
+
+	fgs "github.com/marcos-dev88/go-getter-setter/getter_setter/file_gs"
 )
 
 type FunctionDefinitionSet interface {
-	SettersPhp() ([]byte, error)
+	SettersPhp(attributes []fgs.Attribute) ([]byte, error)
 }
 
-func (d Definition) SettersPhp() ([]byte, error) {
+func (d Definition) SettersPhp(attr []fgs.Attribute) ([]byte, error) {
 
-	var settersDef = make([]byte, len(d.FileGs.Attributes))
+	var settersDef = make([]byte, len(attr))
 	var setters = make([]byte, len(settersDef))
 
-	for i := 0; i < len(d.FileGs.Attributes); i++ {
+	for i := 0; i < len(attr); i++ {
 
-		varType := d.FileGs.Attributes[i].Type
-		varName := d.FileGs.Attributes[i].Name
-		fmtVar, err := d.FileGs.Attributes[i].Format()
+		varType := attr[i].Type
+		varName := attr[i].Name
+		fmtVar, err := attr[i].Format()
 
 		if err != nil {
 			return nil, err

@@ -23,4 +23,4 @@ type definitionMock struct {
 	FunctionDefinitionGet
 }
 
-var definitionEntityMock = NewDefinition(fileEntityMock)
+var definitionEntityMock = NewDefinition()

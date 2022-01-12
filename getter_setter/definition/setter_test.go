@@ -7,7 +7,7 @@ import (
 
 func Test_SettersPhp(t *testing.T) {
 	t.Run("Test setters php definition", func(t *testing.T) {
-		setters, err := definitionEntityMock.SettersPhp()
+		setters, err := definitionEntityMock.SettersPhp(fileEntityMock.Attributes)
 
 		if err != nil {
 			log.Fatalf("\nerror: %v", err)
