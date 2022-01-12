@@ -8,14 +8,14 @@ type FunctionDefinitionGet interface {
 
 func (d Definition) GettersPhp() ([]byte, error) {
 
-	var getterDef = make([]byte, len(d.File.Attributes))
+	var getterDef = make([]byte, len(d.FileGs.Attributes))
 	var getters = make([]byte, len(getterDef))
 
-	for i := 0; i < len(d.File.Attributes); i++ {
+	for i := 0; i < len(d.FileGs.Attributes); i++ {
 
-		varName := d.File.Attributes[i].Name
-		varType := d.File.Attributes[i].Type
-		attr, err := d.File.Attributes[i].Format()
+		varName := d.FileGs.Attributes[i].Name
+		varType := d.FileGs.Attributes[i].Type
+		attr, err := d.FileGs.Attributes[i].Format()
 
 		if err != nil {
 			return nil, err
@@ -27,6 +27,7 @@ func (d Definition) GettersPhp() ([]byte, error) {
 				{
 					return $this->` + varName + `;
 				}
+
 			`)
 		} else {
 			getterDef = []byte(`
@@ -34,6 +35,7 @@ func (d Definition) GettersPhp() ([]byte, error) {
 				{
 					return $this->` + varName + `;
 				}
+
 			`)
 		}
 

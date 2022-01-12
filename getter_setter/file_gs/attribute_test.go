@@ -1,4 +1,4 @@
-package attribute
+package file_gs
 
 import (
 	"log"
