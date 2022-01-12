@@ -19,11 +19,7 @@ type (
 	}
 )
 
-func NewFile(path, language, visibility string, attributes []Attribute) File {
-	return File{Path: path, Language: language, Visibility: visibility, Attributes: attributes}
-}
-
-func (f File) GetFileAttributes(fileName string) ([]byte, error) {
+func (f FileGs) GetFileAttributes(fileName string) ([]byte, error) {
 	file, err := os.Open(fileName)
 
 	defer func(file *os.File) {
@@ -46,7 +42,7 @@ func (f File) GetFileAttributes(fileName string) ([]byte, error) {
 	return nil, nil
 }
 
-func (f File) WriteGetters(attributeNames []string) {
+func (f FileGs) WriteGetters(attributeNames []string) {
 
 	// some := "public function getMyName() {
 	// 	return $this->my_name;
@@ -62,10 +58,10 @@ func (f File) WriteGetters(attributeNames []string) {
 
 }
 
-func (f File) WriteSetters(attributeNames []string) {
+func (f FileGs) WriteSetters(attributeNames []string) {
 
 }
 
-func (f File) GetAttributeFilter() string {
+func (f FileGs) GetAttributeFilter() string {
 	return ""
 }

@@ -11,14 +11,14 @@ type FunctionDefinitionSet interface {
 
 func (d Definition) SettersPhp() ([]byte, error) {
 
-	var settersDef = make([]byte, len(d.File.Attributes))
+	var settersDef = make([]byte, len(d.FileGs.Attributes))
 	var setters = make([]byte, len(settersDef))
 
-	for i := 0; i < len(d.File.Attributes); i++ {
+	for i := 0; i < len(d.FileGs.Attributes); i++ {
 
-		varType := d.File.Attributes[i].Type
-		varName := d.File.Attributes[i].Name
-		fmtVar, err := d.File.Attributes[i].Format()
+		varType := d.FileGs.Attributes[i].Type
+		varName := d.FileGs.Attributes[i].Name
+		fmtVar, err := d.FileGs.Attributes[i].Format()
 
 		if err != nil {
 			return nil, err
@@ -41,7 +41,7 @@ func (d Definition) SettersPhp() ([]byte, error) {
 				{
 					$this->` + varName + ` = ` + localVar + `;
 				}
-				
+
 			`)
 		}
 

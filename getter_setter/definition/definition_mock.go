@@ -16,7 +16,7 @@ var attrs = []fgs.Attribute{
 	fgs.NewAttribute("TestVar", "double"),
 }
 
-var fileEntityMock = fgs.NewFile("some/path", "php", "private", attrs)
+var fileEntityMock = fgs.NewFileGs("some/path", "php", "private", attrs)
 var fileMock = fileMockTest{fileEntityMock}
 
 type definitionMock struct {

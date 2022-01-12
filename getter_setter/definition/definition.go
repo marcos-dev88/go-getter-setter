@@ -9,14 +9,14 @@ type (
 	}
 
 	Definition struct {
-		File fgs.File
+		FileGs fgs.FileGs
 		FunctionDefinitionGet
 		FunctionDefinitionSet
 	}
 )
 
-func NewDefinition(file fgs.File) Definition {
-	return Definition{File: file}
+func NewDefinition(file fgs.FileGs) Definition {
+	return Definition{FileGs: file}
 }
 
 func (d Definition) GenFunctionGetByExtension() ([]byte, error) {
@@ -31,7 +31,7 @@ func (d Definition) GenFunctionGetByExtension() ([]byte, error) {
 		"php": gphp,
 	}
 
-	return languages[d.File.Language], nil
+	return languages[d.FileGs.Language], nil
 }
 
 func (d Definition) GenFunctionSetByExtension() ([]byte, error) {
@@ -46,5 +46,5 @@ func (d Definition) GenFunctionSetByExtension() ([]byte, error) {
 		"php": sphp,
 	}
 
-	return languages[d.File.Language], nil
+	return languages[d.FileGs.Language], nil
 }
