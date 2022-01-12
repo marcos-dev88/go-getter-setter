@@ -33,6 +33,7 @@ func (d Definition) SettersPhp() ([]byte, error) {
 				{
 					$this->` + varName + ` = ` + localVar + `;
 				}
+
 			`)
 		} else {
 			settersDef = []byte(`
@@ -40,6 +41,7 @@ func (d Definition) SettersPhp() ([]byte, error) {
 				{
 					$this->` + varName + ` = ` + localVar + `;
 				}
+				
 			`)
 		}
 

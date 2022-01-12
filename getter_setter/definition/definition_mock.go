@@ -1,23 +1,22 @@
 package definition
 
 import (
-	gs "github.com/marcos-dev88/go-getter-setter/getter_setter"
-	"github.com/marcos-dev88/go-getter-setter/getter_setter/attribute"
+	fgs "github.com/marcos-dev88/go-getter-setter/getter_setter/file_gs"
 )
 
 type fileMockTest struct {
-	gs.FileConfig
+	fgs.FileConfig
 }
 
-var attrs = []attribute.Attribute{
-	attribute.NewAttribute("Myvaribale", "string"),
-	attribute.NewAttribute("my_varibale", "integer"),
-	attribute.NewAttribute("my_amazing_varibale", "int"),
-	attribute.NewAttribute("myOtherVaribale", "Boolean"),
-	attribute.NewAttribute("TestVar", "double"),
+var attrs = []fgs.Attribute{
+	fgs.NewAttribute("Myvaribale", "string"),
+	fgs.NewAttribute("my_varibale", "integer"),
+	fgs.NewAttribute("my_amazing_varibale", "int"),
+	fgs.NewAttribute("myOtherVaribale", "Boolean"),
+	fgs.NewAttribute("TestVar", "double"),
 }
 
-var fileEntityMock = gs.NewFile("some/path", "php", "private", attrs)
+var fileEntityMock = fgs.NewFile("some/path", "php", "private", attrs)
 var fileMock = fileMockTest{fileEntityMock}
 
 type definitionMock struct {

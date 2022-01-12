@@ -1,6 +1,6 @@
 package definition
 
-import gs "github.com/marcos-dev88/go-getter-setter/getter_setter"
+import fgs "github.com/marcos-dev88/go-getter-setter/getter_setter/file_gs"
 
 type (
 	GenerateFunction interface {
@@ -9,13 +9,13 @@ type (
 	}
 
 	Definition struct {
-		File gs.File
+		File fgs.File
 		FunctionDefinitionGet
 		FunctionDefinitionSet
 	}
 )
 
-func NewDefinition(file gs.File) Definition {
+func NewDefinition(file fgs.File) Definition {
 	return Definition{File: file}
 }
 

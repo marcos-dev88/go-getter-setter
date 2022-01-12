@@ -27,6 +27,7 @@ func (d Definition) GettersPhp() ([]byte, error) {
 				{
 					return $this->` + varName + `;
 				}
+				
 			`)
 		} else {
 			getterDef = []byte(`
@@ -34,6 +35,7 @@ func (d Definition) GettersPhp() ([]byte, error) {
 				{
 					return $this->` + varName + `;
 				}
+
 			`)
 		}
 
