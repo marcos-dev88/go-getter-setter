@@ -2,24 +2,22 @@ package definition
 
 import (
 	"strings"
-
-	fgs "github.com/marcos-dev88/go-getter-setter/getter_setter/file_gs"
 )
 
 type FunctionDefinitionGet interface {
-	GettersPhp(attributes []fgs.Attribute) ([]byte, error)
+	GettersPhp() ([]byte, error)
 }
 
-func (d Definition) GettersPhp(attr []fgs.Attribute) ([]byte, error) {
+func (d Definition) GettersPhp() ([]byte, error) {
 
-	var getterDef = make([]byte, len(attr))
+	var getterDef = make([]byte, len(d.File.Attributes))
 	var getters = make([]byte, len(getterDef))
 
-	for i := 0; i < len(attr); i++ {
+	for i := 0; i < len(d.File.Attributes); i++ {
 
-		varName := attr[i].Name
-		varType := attr[i].Type
-		attr, err := attr[i].Format()
+		varName := d.File.Attributes[i].Name
+		varType := d.File.Attributes[i].Type
+		attr, err := d.File.Attributes[i].Format()
 
 		if err != nil {
 			return nil, err

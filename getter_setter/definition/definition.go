@@ -4,23 +4,24 @@ import fgs "github.com/marcos-dev88/go-getter-setter/getter_setter/file_gs"
 
 type (
 	GenerateFunction interface {
-		GenFunctionGetByExtension(file fgs.FileGs) (error, []byte)
-		GenFunctionSetByExtension(file fgs.FileGs) (error, []byte)
+		GenFunctionGetByExtension() (error, []byte)
+		GenFunctionSetByExtension() (error, []byte)
 	}
 
 	Definition struct {
+		File fgs.FileGs
 		FunctionDefinitionGet
 		FunctionDefinitionSet
 	}
 )
 
-func NewDefinition() Definition {
-	return Definition{}
+func NewDefinition(file fgs.FileGs) Definition {
+	return Definition{File: file}
 }
 
-func (d Definition) GenFunctionGetByExtension(file fgs.FileGs) ([]byte, error) {
+func (d Definition) GenFunctionGetByExtension() ([]byte, error) {
 
-	gphp, err := d.GettersPhp(file.Attributes)
+	gphp, err := d.GettersPhp()
 
 	if err != nil {
 		return nil, err
@@ -30,12 +31,12 @@ func (d Definition) GenFunctionGetByExtension(file fgs.FileGs) ([]byte, error) {
 		"php": gphp,
 	}
 
-	return languages[file.Language], nil
+	return languages[d.File.Language], nil
 }
 
-func (d Definition) GenFunctionSetByExtension(file fgs.FileGs) ([]byte, error) {
+func (d Definition) GenFunctionSetByExtension() ([]byte, error) {
 
-	sphp, err := d.SettersPhp(file.Attributes)
+	sphp, err := d.SettersPhp()
 
 	if err != nil {
 		return nil, err
@@ -45,5 +46,5 @@ func (d Definition) GenFunctionSetByExtension(file fgs.FileGs) ([]byte, error) {
 		"php": sphp,
 	}
 
-	return languages[file.Language], nil
+	return languages[d.File.Language], nil
 }
