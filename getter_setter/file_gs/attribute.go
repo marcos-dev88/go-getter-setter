@@ -33,7 +33,10 @@ func formatSnakeCase(attribute string) (string, error) {
 
 	var attFinalName string
 
-	// Make error checking if exists some '_' or if comes something empty
+	if len(attributeSpaces) == 0 {
+		return "", fmt.Errorf("error: was expected an attribute here and nothing given")
+	}
+
 	var upperNames = make([]string, len(attributeSpaces))
 
 	for i := 0; i < len(attributeSpaces); i++ {
