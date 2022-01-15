@@ -17,21 +17,20 @@ type (
 	}
 )
 
-func NewContainer() container {
-	return container{}
+func NewContainer() *container {
+	return &container{}
 }
 
 func (co container) GetFileGS() *fgs.FileGs {
 	if &co.FileGs == nil {
-		attr := []fgs.Attribute{fgs.NewAttribute("", "")}
-		co.FileGs = fgs.NewFileGs("", "", "", attr)
+		co.FileGs = fgs.NewFileGs("", "", "", []fgs.Attribute{fgs.NewAttribute("", "")})
 	}
 	return &co.FileGs
 }
 
 func (co container) GetDefinition() *definition.Definition {
 	if &co.Definition == nil {
-		co.Definition = definition.NewDefinition()
+		co.Definition = definition.NewDefinition(*co.GetFileGS())
 	}
 	return &co.Definition
 }
