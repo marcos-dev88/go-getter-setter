@@ -5,7 +5,7 @@ import (
 )
 
 type fileMockTest struct {
-	fgs.FileConfig
+	fgs.FileGs
 }
 
 var attrs = []fgs.Attribute{
