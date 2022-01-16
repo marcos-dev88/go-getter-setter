@@ -26,3 +26,4 @@ type definitionMock struct {
 }
 
 var definitionEntityMock = NewDefinition(fileEntityMock)
+var definitionEntityMockLocal = NewDefinition(fileLocalMock)

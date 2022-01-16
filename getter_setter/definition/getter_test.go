@@ -18,13 +18,11 @@ func TestGetter(t *testing.T) {
 	})
 
 	t.Run("Test_GettersPHP_FileCreatedMock", func(t *testing.T) {
-		err := fileLocalMock.SetAttributesByFile()
+		err := definitionEntityMockLocal.DefineFileGsAttributes()
 
 		if err != nil {
 			t.Errorf("error: %v", err)
 		}
-
-		var definitionEntityMockLocal = NewDefinition(fileLocalMock)
 
 		gettersPHP, err := definitionEntityMockLocal.GettersPhp()
 
