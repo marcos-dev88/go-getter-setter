@@ -6,6 +6,7 @@ import (
 	"log"
 	"os"
 	"regexp"
+	"strings"
 )
 
 type (
@@ -27,7 +28,7 @@ type (
 func (f FileGs) GetFileAttributes() ([]byte, error) {
 	file, err := os.Open(f.Path)
 
-	var regexAttr = regexp.MustCompile(fmt.Sprintf(`%v (\S+) = (\S+);`, f.Visibility))
+	var regexAttr = regexp.MustCompile(fmt.Sprintf(`%v (\S+) = (\S+);`, f.Visibility)) // Soon will have regex for each languange
 
 	var attrByteArr = make([]byte, 2048)
 
@@ -45,15 +46,41 @@ func (f FileGs) GetFileAttributes() ([]byte, error) {
 	sc := bufio.NewScanner(file)
 
 	for sc.Scan() {
-		log.Printf("%v", sc.Text())
 		attrMatch := regexAttr.FindStringSubmatch(sc.Text())
 		if attrMatch != nil {
-			attrByteArr = append(attrByteArr, []byte(attrMatch[1]+" ")...)
-			attrByteArr = append(attrByteArr, []byte(attrMatch[2]+" | ")...)
+			attrByteArr = append(attrByteArr, []byte("var_name: "+attrMatch[1]+" - type: "+attrMatch[2]+"|")...)
 		}
 	}
 
 	return attrByteArr, nil
+}
+
+func (f *FileGs) SetAttributesByFile() error {
+	var regexAttr = regexp.MustCompile(`var_name: (\S+) - type: (\S+)`)
+
+	attrs, err := f.GetFileAttributes()
+	var attributesStringArr = strings.Split(string(attrs), "|")
+
+	var attrArr []Attribute
+
+	if err != nil {
+		return err
+
+	}
+
+	for _, v := range attributesStringArr {
+
+		attrMatch := regexAttr.FindStringSubmatch(v)
+
+		if attrMatch != nil {
+			log.Printf("attr: %v", attrMatch)
+			attrArr = append(attrArr, NewAttribute(attrMatch[1], attrMatch[2]))
+		}
+	}
+
+	f.Attributes = attrArr
+
+	return nil
 }
 
 func (f FileGs) WriteGetters(attributeNames []string) {
