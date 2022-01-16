@@ -4,8 +4,8 @@ import fgs "github.com/marcos-dev88/go-getter-setter/getter_setter/file_gs"
 
 type (
 	GenerateFunction interface {
-		GenFunctionGetByExtension() (error, []byte)
-		GenFunctionSetByExtension() (error, []byte)
+		GenFunctionGetByLanguage() (error, []byte)
+		GenFunctionSetByLanguage() (error, []byte)
 	}
 
 	Definition struct {
@@ -19,7 +19,7 @@ func NewDefinition(file fgs.FileGs) Definition {
 	return Definition{File: file}
 }
 
-func (d Definition) GenFunctionGetByExtension() ([]byte, error) {
+func (d Definition) GenFunctionGetByLanguage() ([]byte, error) {
 
 	gphp, err := d.GettersPhp()
 
@@ -34,7 +34,7 @@ func (d Definition) GenFunctionGetByExtension() ([]byte, error) {
 	return languages[d.File.Language], nil
 }
 
-func (d Definition) GenFunctionSetByExtension() ([]byte, error) {
+func (d Definition) GenFunctionSetByLanguage() ([]byte, error) {
 
 	sphp, err := d.SettersPhp()
 
