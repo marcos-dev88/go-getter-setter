@@ -6,7 +6,6 @@ import (
 	"log"
 	"os"
 	"regexp"
-	"strings"
 )
 
 type (
@@ -53,34 +52,6 @@ func (f FileGs) GetFileAttributes() ([]byte, error) {
 	}
 
 	return attrByteArr, nil
-}
-
-func (f *FileGs) SetAttributesByFile() error {
-	var regexAttr = regexp.MustCompile(`var_name: (\S+) - type: (\S+)`)
-
-	attrs, err := f.GetFileAttributes()
-	var attributesStringArr = strings.Split(string(attrs), "|")
-
-	var attrArr []Attribute
-
-	if err != nil {
-		return err
-
-	}
-
-	for _, v := range attributesStringArr {
-
-		attrMatch := regexAttr.FindStringSubmatch(v)
-
-		if attrMatch != nil {
-			log.Printf("attr: %v", attrMatch)
-			attrArr = append(attrArr, NewAttribute(attrMatch[1], attrMatch[2]))
-		}
-	}
-
-	f.Attributes = attrArr
-
-	return nil
 }
 
 func (f FileGs) WriteGetters(attributeNames []string) {
