@@ -9,11 +9,11 @@ type fileMockTest struct {
 }
 
 var attrs = []fgs.Attribute{
-	fgs.NewAttribute("Myvaribale", "string"),
-	fgs.NewAttribute("my_varibale", "integer"),
-	fgs.NewAttribute("my_amazing_varibale", "int"),
-	fgs.NewAttribute("myOtherVaribale", "Boolean"),
-	fgs.NewAttribute("TestVar", "double"),
+	fgs.NewAttribute("$Myvaribale", "string"),
+	fgs.NewAttribute("$my_varibale", "integer"),
+	fgs.NewAttribute("$my_amazing_varibale", "int"),
+	fgs.NewAttribute("$myOtherVaribale", "Boolean"),
+	fgs.NewAttribute("$TestVar", "double"),
 }
 
 var fileEntityMock = fgs.NewFileGs("some/path", "php", "private", attrs)
