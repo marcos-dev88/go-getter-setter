@@ -16,4 +16,22 @@ func TestGetter(t *testing.T) {
 
 		log.Printf("\ngetters: \n %v", string(gettersPHP))
 	})
+
+	t.Run("Test_GettersPHP_FileCreatedMock", func(t *testing.T) {
+		err := fileLocalMock.SetAttributesByFile()
+
+		if err != nil {
+			t.Errorf("error: %v", err)
+		}
+
+		var definitionEntityMockLocal = NewDefinition(fileLocalMock)
+
+		gettersPHP, err := definitionEntityMockLocal.GettersPhp()
+
+		if err != nil {
+			t.Errorf("error: %v", err)
+		}
+
+		log.Printf("\n getters locally: \n %v", string(gettersPHP))
+	})
 }
