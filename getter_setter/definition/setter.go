@@ -2,6 +2,7 @@ package definition
 
 import (
 	"fmt"
+	"regexp"
 	"strings"
 )
 
@@ -25,21 +26,21 @@ func (d Definition) SettersPhp() ([]byte, error) {
 		}
 
 		stringVar := string(fmtVar)
-		localVar := fmt.Sprintf("$%v%v", strings.ToLower(stringVar[:1]), stringVar[1:])
+		localVar := fmt.Sprintf("%v%v", strings.ToLower(stringVar[:2]), stringVar[2:])
 
 		if strings.ToLower(varType) == "bool" || strings.ToLower(varType) == "boolean" {
 			settersDef = []byte(`
-				public function setIs` + fmtVar + `(` + varType + ` ` + localVar + `)
+				public function setIs` + fmtVar[1:] + `(` + checkTypeByValue(varType) + ` ` + localVar + `)
 				{
-					$this->` + varName + ` = ` + localVar + `;
+					$this->` + varName[1:] + ` = ` + localVar + `;
 				}
 
 			`)
 		} else {
 			settersDef = []byte(`
-				public function set` + fmtVar + `(` + varType + ` ` + localVar + `)
+				public function set` + fmtVar[1:] + `(` + checkTypeByValue(varType) + ` ` + localVar + `)
 				{
-					$this->` + varName + ` = ` + localVar + `;
+					$this->` + varName[1:] + ` = ` + localVar + `;
 				}
 
 			`)
@@ -48,4 +49,32 @@ func (d Definition) SettersPhp() ([]byte, error) {
 		setters = append(setters, settersDef...)
 	}
 	return setters, nil
+}
+
+func checkTypeByValue(value string) string {
+	regexBool := regexp.MustCompile(`(true|false)`)
+	regexString := regexp.MustCompile(`(''|"")`)
+	regexInt := regexp.MustCompile(`[0-9]`)
+	regexDouble := regexp.MustCompile(`([0-9].[0,9])`)
+
+	boleanVal := regexBool.FindStringSubmatch(value)
+
+	stringVal := regexString.FindStringSubmatch(value)
+
+	intVal := regexInt.FindStringSubmatch(value)
+
+	doubleVal := regexDouble.FindStringSubmatch(value)
+
+	switch {
+	case len(boleanVal) > 0:
+		return "bool"
+	case len(stringVal) > 0:
+		return "string"
+	case len(doubleVal) > 0:
+		return "double"
+	case len(intVal) > 0:
+		return "int"
+	default:
+		return value
+	}
 }
