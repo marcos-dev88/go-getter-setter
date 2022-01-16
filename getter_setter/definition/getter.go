@@ -23,19 +23,23 @@ func (d Definition) GettersPhp() ([]byte, error) {
 			return nil, err
 		}
 
-		if strings.ToLower(varType) == "bool" || strings.ToLower(varType) == "boolean" {
+		if strings.ToLower(varType) == "bool" ||
+			strings.ToLower(varType) == "boolean" ||
+			strings.ToLower(varType) == "true" ||
+			strings.ToLower(varType) == "false" {
+
 			getterDef = []byte(`
-				public function is` + attr + `() 
+				public function is` + attr[1:] + `() 
 				{
-					return $this->` + varName + `;
+					return $this->` + varName[1:] + `;
 				}
 
 			`)
 		} else {
 			getterDef = []byte(`
-				public function get` + attr + `() 
+				public function get` + attr[1:] + `() 
 				{
-					return $this->` + varName + `;
+					return $this->` + varName[1:] + `;
 				}
 
 			`)
