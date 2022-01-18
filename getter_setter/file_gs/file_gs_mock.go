@@ -12,7 +12,7 @@ var fileGsEntityMock = NewFileGs(
 )
 
 var fileGsEntityMockLocal = NewFileGs(
-	"../../testFile.php",
+	"../../testFiles/testPhpFile.php",
 	"php",
 	"private",
 	[]Attribute{NewAttribute("", "")},
