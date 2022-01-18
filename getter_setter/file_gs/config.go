@@ -15,12 +15,6 @@ type (
 
 	FileReader interface {
 		GetFileAttributes() ([]byte, error)
-		GetAttributeFilter() string
-	}
-
-	FileWritter interface {
-		WriteGetters(attributeNames []string)
-		WriteSetters(attributeNames []string)
 	}
 )
 
@@ -34,6 +28,9 @@ func (f FileGs) GetFileAttributes() ([]byte, error) {
 	defer func(file *os.File) {
 		err := file.Close()
 		if err != nil {
+			if err.Error() == "invalid argument" {
+				log.Fatalf("\nerror: %v, file is undefined or not found, try update the path.\n", err)
+			}
 			log.Fatalf("\nerror: %v", err)
 		}
 	}(file)
@@ -52,27 +49,4 @@ func (f FileGs) GetFileAttributes() ([]byte, error) {
 	}
 
 	return attrByteArr, nil
-}
-
-func (f FileGs) WriteGetters(attributeNames []string) {
-
-	// some := "public function getMyName() {
-	// 	return $this->my_name;
-	// }"
-
-	// var wStr = make([]byte, len(attributeNames))
-
-	// for _, attr := range attributeNames {
-	// 	wStr = append(wStr, byte(
-	// 		"public function "
-	// 	))
-	// }
-}
-
-func (f FileGs) WriteSetters(attributeNames []string) {
-
-}
-
-func (f FileGs) GetAttributeFilter() string {
-	return ""
 }
