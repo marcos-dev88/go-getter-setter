@@ -1,6 +1,6 @@
 <?php
 
-class Some
+class TestPhpFile
 {
     /**
      *
@@ -8,24 +8,13 @@ class Some
      * 
      */
 
-    private $my_name = '';
+    private $myName = '';
 
-    private $my_other = '';
+    private $myOther = '';
 
-    private $my_test = 0;
+    private $myTest = 0;
 
-    private $mydouble = 0.0;
+    private $myDouble = 0.0;
 
     private $myBool = true;
-
-
-    public function getMyName()
-    {
-        return $this->my_name;
-    }
-
-    public function setMyName(string $myName)
-    {
-        $this->my_name = $myName;
-    }
 }
