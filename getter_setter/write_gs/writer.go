@@ -1,13 +1,14 @@
 package write_gs
 
 import (
-	"fmt"
 	"log"
 	"os"
 	"strings"
 
 	"github.com/marcos-dev88/go-getter-setter/getter_setter/definition"
 )
+
+const EmptyStringByteValue = 32
 
 type (
 	Write interface {
@@ -56,8 +57,13 @@ func (w Writer) WriteGettersAndSetters() error {
 		}
 	}(file)
 
-	_, err = fmt.Fprintf(file, string(getters)+"\n"+string(setters))
-	_, err = fmt.Fprintf(file, "\n}")
+	removeZeroByteVal(getters)
+	removeZeroByteVal(setters)
+	_, err = file.Write([]byte("//Getters"))
+	_, err = file.Write(getters)
+	_, err = file.Write([]byte("\n//Setters"))
+	_, err = file.Write(setters)
+	_, err = file.Write([]byte("\n}"))
 
 	if err != nil {
 		return err
@@ -66,8 +72,21 @@ func (w Writer) WriteGettersAndSetters() error {
 	return nil
 }
 
+func removeZeroByteVal(data []byte) {
+	for i := 0; i < len(data); i++ {
+		if data[i] == 0 {
+			data[i] = byte(EmptyStringByteValue)
+		}
+	}
+
+}
+
 func removeLastBraces(filePath string) error {
-	in, _ := os.ReadFile(filePath)
+	in, err := os.ReadFile(filePath)
+
+	if err != nil {
+		return err
+	}
 
 	lines := strings.Split(string(in), "\n")
 
@@ -78,7 +97,8 @@ func removeLastBraces(filePath string) error {
 	}
 
 	newFileContent := strings.Join(lines, "\n")
-	err := os.WriteFile(filePath, []byte(newFileContent), 0766)
+
+	err = os.WriteFile(filePath, []byte(newFileContent), 0766)
 
 	if err != nil {
 		return err

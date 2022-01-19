@@ -28,21 +28,15 @@ func (d Definition) GettersPhp() ([]byte, error) {
 			strings.ToLower(varType) == "true" ||
 			strings.ToLower(varType) == "false" {
 
-			getterDef = []byte(`
-				public function is` + attr[1:] + `() 
-				{
-					return $this->` + varName[1:] + `;
-				}
-
-			`)
+			getterDef = []byte("\n\tpublic function is" + attr[1:] + "()" +
+				"\n\t{" +
+				"\n\t\treturn $this->" + varName[1:] + ";" +
+				"\n\t}\n")
 		} else {
-			getterDef = []byte(`
-				public function get` + attr[1:] + `() 
-				{
-					return $this->` + varName[1:] + `;
-				}
-
-			`)
+			getterDef = []byte("\n\tpublic function get" + attr[1:] + "()" +
+				"\n\t{" +
+				"\n\t\treturn $this->" + varName[1:] + ";" +
+				"\n\t}\n")
 		}
 
 		getters = append(getters, getterDef...)
