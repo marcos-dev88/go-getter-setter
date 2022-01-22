@@ -1,19 +1,22 @@
 package di
 
 import (
-	"github.com/marcos-dev88/go-getter-setter/getter_setter/definition"
+	def "github.com/marcos-dev88/go-getter-setter/getter_setter/definition"
 	fgs "github.com/marcos-dev88/go-getter-setter/getter_setter/file_gs"
+	wgs "github.com/marcos-dev88/go-getter-setter/getter_setter/write_gs"
 )
 
 type (
 	Container interface {
 		GetFileGS() *fgs.FileGs
-		GetDefinition() *definition.Definition
+		GetDefinition() *def.Definition
+		GetWritterGS() *wgs.Writer
 	}
 
 	container struct {
 		FileGs     fgs.FileGs
-		Definition definition.Definition
+		Definition def.Definition
+		Writer     wgs.Writer
 	}
 )
 
@@ -28,9 +31,16 @@ func (co container) GetFileGS() *fgs.FileGs {
 	return &co.FileGs
 }
 
-func (co container) GetDefinition() *definition.Definition {
+func (co container) GetDefinition() *def.Definition {
 	if &co.Definition == nil {
-		co.Definition = definition.NewDefinition(*co.GetFileGS())
+		co.Definition = def.NewDefinition(*co.GetFileGS())
 	}
 	return &co.Definition
+}
+
+func (co container) GetWritterGS() *wgs.Writer {
+	if &co.Writer == nil {
+		co.Writer = wgs.NewWriter(*co.GetDefinition())
+	}
+	return &co.Writer
 }
