@@ -13,8 +13,8 @@ type (
 	}
 
 	GenerateFunction interface {
-		GenFunctionGetByLanguage() (error, []byte)
-		GenFunctionSetByLanguage() (error, []byte)
+		GenFunctionGetByLanguage() ([]byte, error)
+		GenFunctionSetByLanguage() ([]byte, error)
 	}
 
 	Definition struct {
