@@ -1,26 +1,23 @@
 package main
 
 import (
-	"log"
-
-	"github.com/marcos-dev88/go-getter-setter/getter_setter/definition"
+	"github.com/marcos-dev88/go-getter-setter/getter_setter/di"
 	"github.com/marcos-dev88/go-getter-setter/getter_setter/file_gs"
-	"github.com/marcos-dev88/go-getter-setter/getter_setter/write_gs"
+	"github.com/marcos-dev88/go-getter-setter/getter_setter/logger"
 )
 
 func main() {
+	logger := logger.NewLogging()
 
-	file := file_gs.NewFileGs("./testFiles/testPhpFile.php", "php", "private", []file_gs.Attribute{})
+	file := file_gs.NewFileGs("./testFiles/testPhpFile.php", "php", "private", []file_gs.Attribute{}, logger)
+	co := di.NewContainer(file)
 
-	def := definition.NewDefinition(file)
-
-	writer := write_gs.NewWriter(def)
+	writer := co.GetWriter()
 
 	err := writer.WriteGettersAndSetters()
-
 	if err != nil {
-		log.Fatalf("error: %v", err)
+		logger.NewLog("error", "error: ", err)
 	} else {
-		log.Printf("[LOG] - All Getter and setters has been created!")
+		logger.NewLog("debug", "All Getter and setters has been created!", nil)
 	}
 }
