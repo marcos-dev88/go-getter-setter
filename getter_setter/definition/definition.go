@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	fgs "github.com/marcos-dev88/go-getter-setter/getter_setter/file_gs"
+	"github.com/marcos-dev88/go-getter-setter/getter_setter/logger"
 )
 
 type (
@@ -18,14 +19,15 @@ type (
 	}
 
 	Definition struct {
-		File fgs.FileGs
+		File   fgs.FileGs
+		Logger logger.Logging
 		FunctionDefinitionGet
 		FunctionDefinitionSet
 	}
 )
 
-func NewDefinition(file fgs.FileGs) Definition {
-	return Definition{File: file}
+func NewDefinition(file fgs.FileGs, logger logger.Logging) Definition {
+	return Definition{File: file, Logger: logger}
 }
 
 func (d Definition) GenFunctionGetByLanguage() ([]byte, error) {
@@ -33,6 +35,7 @@ func (d Definition) GenFunctionGetByLanguage() ([]byte, error) {
 	gphp, err := d.GettersPhp()
 
 	if err != nil {
+		d.Logger.NewLog("error", "err: ", err)
 		return nil, err
 	}
 
@@ -48,6 +51,7 @@ func (d Definition) GenFunctionSetByLanguage() ([]byte, error) {
 	sphp, err := d.SettersPhp()
 
 	if err != nil {
+		d.Logger.NewLog("error", "err: ", err)
 		return nil, err
 	}
 
@@ -67,6 +71,7 @@ func (d *Definition) DefineFileGsAttributes() error {
 	var attrArr []fgs.Attribute
 
 	if err != nil {
+		d.Logger.NewLog("error", "err: ", err)
 		return err
 
 	}

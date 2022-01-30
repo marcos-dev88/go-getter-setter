@@ -4,6 +4,7 @@ import (
 	"github.com/marcos-dev88/go-getter-setter/getter_setter/definition"
 	def "github.com/marcos-dev88/go-getter-setter/getter_setter/definition"
 	fgs "github.com/marcos-dev88/go-getter-setter/getter_setter/file_gs"
+	"github.com/marcos-dev88/go-getter-setter/getter_setter/logger"
 )
 
 type writerMock struct {
@@ -14,6 +15,8 @@ type fileMockTest struct {
 	fgs.FileGs
 }
 
+var logg = logger.NewLogging()
+
 var attrs = []fgs.Attribute{
 	fgs.NewAttribute("$Myvaribale", "string"),
 	fgs.NewAttribute("$my_varibale", "integer"),
@@ -22,8 +25,8 @@ var attrs = []fgs.Attribute{
 	fgs.NewAttribute("$TestVar", "double"),
 }
 
-var fileEntityMock = fgs.NewFileGs("some/path", "php", "private", attrs)
-var fileLocalMock = fgs.NewFileGs("../../testFiles/testPhpFile.php", "php", "private", []fgs.Attribute{})
+var fileEntityMock = fgs.NewFileGs("some/path", "php", "private", attrs, logg)
+var fileLocalMock = fgs.NewFileGs("../../testFiles/testPhpFile.php", "php", "private", []fgs.Attribute{}, logg)
 
 var fileMock = fileMockTest{fileEntityMock}
 
@@ -31,6 +34,6 @@ type definitionMock struct {
 	def.FunctionDefinitionGet
 }
 
-var definitionEntityMockLocal = def.NewDefinition(fileLocalMock)
+var definitionEntityMockLocal = def.NewDefinition(fileLocalMock, logg)
 
-var writerEntityMockLocale = NewWriter(definitionEntityMockLocal)
+var writerEntityMockLocale = NewWriter(definitionEntityMockLocal, logg)
