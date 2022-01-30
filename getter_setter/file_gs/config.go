@@ -3,7 +3,6 @@ package file_gs
 import (
 	"bufio"
 	"fmt"
-	"log"
 	"os"
 	"regexp"
 )
@@ -29,13 +28,14 @@ func (f FileGs) GetFileAttributes() ([]byte, error) {
 		err := file.Close()
 		if err != nil {
 			if err.Error() == "invalid argument" {
-				log.Fatalf("\nerror: %v, file is undefined or not found, try update the path.\n", err)
+				f.Logger.NewLog("error", "file is undefined or not found, try update the path. error:", err)
 			}
-			log.Fatalf("\nerror: %v", err)
+			f.Logger.NewLog("error", "error:", err)
 		}
 	}(file)
 
 	if err != nil {
+		f.Logger.NewLog("error", "error: ", err)
 		return nil, err
 	}
 

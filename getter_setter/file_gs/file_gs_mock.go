@@ -1,5 +1,7 @@
 package file_gs
 
+import "github.com/marcos-dev88/go-getter-setter/getter_setter/logger"
+
 type fileGsMockTest struct {
 	FileReader
 }
@@ -9,6 +11,7 @@ var fileGsEntityMock = NewFileGs(
 	"",
 	"",
 	[]Attribute{NewAttribute("", "")},
+	logger.NewLogging(),
 )
 
 var fileGsEntityMockLocal = NewFileGs(
@@ -16,4 +19,5 @@ var fileGsEntityMockLocal = NewFileGs(
 	"php",
 	"private",
 	[]Attribute{NewAttribute("", "")},
+	logger.NewLogging(),
 )

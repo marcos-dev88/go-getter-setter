@@ -1,11 +1,11 @@
 package write_gs
 
 import (
-	"log"
 	"os"
 	"strings"
 
 	"github.com/marcos-dev88/go-getter-setter/getter_setter/definition"
+	"github.com/marcos-dev88/go-getter-setter/getter_setter/logger"
 )
 
 const EmptyStringByteValue = 32
@@ -22,11 +22,12 @@ type (
 
 	Writer struct {
 		Definition definition.Definition
+		Logger     logger.Logging
 	}
 )
 
-func NewWriter(def definition.Definition) Writer {
-	return Writer{Definition: def}
+func NewWriter(def definition.Definition, logger logger.Logging) Writer {
+	return Writer{Definition: def, Logger: logger}
 }
 
 func (w Writer) WriteGettersAndSetters() error {
@@ -51,9 +52,9 @@ func (w Writer) WriteGettersAndSetters() error {
 		err := file.Close()
 		if err != nil {
 			if err.Error() == "invalid argument" {
-				log.Fatalf("\nerror: %v, file is undefined or not found, try update the path.\n", err)
+				w.Logger.NewLog("error", "file is undefined or not found, try update the path.", err)
 			}
-			log.Fatalf("\nerror: %v", err)
+			w.Logger.NewLog("error", "error: ", err)
 		}
 	}(file)
 
