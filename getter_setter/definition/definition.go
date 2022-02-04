@@ -31,8 +31,8 @@ func NewDefinition(file fgs.FileGs, logger logger.Logging) Definition {
 }
 
 func (d Definition) GenFunctionGetByLanguage() ([]byte, error) {
-
-	gphp, err := d.GettersPhp()
+	var list = []string{}
+	gphp, err := d.GettersPhp(list)
 
 	if err != nil {
 		d.Logger.NewLog("error", "err: ", err)

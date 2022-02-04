@@ -1,7 +1,10 @@
 package write_gs
 
 import (
+	"bufio"
+	"io"
 	"os"
+	"regexp"
 	"strings"
 
 	"github.com/marcos-dev88/go-getter-setter/getter_setter/definition"
@@ -38,12 +41,6 @@ func (w Writer) WriteGettersAndSetters() error {
 		return err
 	}
 
-	getters, err := w.Definition.GettersPhp()
-	setters, err := w.Definition.SettersPhp()
-
-	if err != nil {
-		return err
-	}
 	err = removeLastBraces(w.Definition.File.Path)
 
 	file, err := os.OpenFile(w.Definition.File.Path, os.O_APPEND|os.O_RDWR, 0766)
@@ -57,6 +54,38 @@ func (w Writer) WriteGettersAndSetters() error {
 			w.Logger.NewLog("error", "error: ", err)
 		}
 	}(file)
+
+	f := bufio.NewReader(file)
+
+	var list []string
+
+	findNameFunc := regexp.MustCompile(`public function (get|is)([a-zA-Z]+)`)
+
+	for {
+		line, err := f.ReadString('\n')
+		line = strings.TrimSpace(line)
+		l := strings.Split(line, "\n")
+
+		for i := 0; i < len(l); i++ {
+			if strings.Contains(l[i], "function") {
+				math := findNameFunc.FindStringSubmatch(l[i]) // fmt.Println(l[i])
+				if math != nil {
+					list = append(list, math[2])
+				}
+			}
+		}
+
+		if err == io.EOF {
+			break
+		}
+	}
+
+	getters, err := w.Definition.GettersPhp(list)
+	setters, err := w.Definition.SettersPhp()
+
+	if err != nil {
+		return err
+	}
 
 	removeZeroByteVal(getters)
 	removeZeroByteVal(setters)
