@@ -10,16 +10,23 @@ type FunctionDefinitionSet interface {
 	SettersPhp() ([]byte, error)
 }
 
-func (d Definition) SettersPhp() ([]byte, error) {
+func (d Definition) SettersPhp(list []string) ([]byte, error) {
 
 	var settersDef = make([]byte, len(d.File.Attributes))
 	var setters = make([]byte, len(settersDef))
 
 	for i := 0; i < len(d.File.Attributes); i++ {
+		var funcIsExist bool = false
 
 		varType := d.File.Attributes[i].Type
 		varName := d.File.Attributes[i].Name
 		fmtVar, err := d.File.Attributes[i].Format()
+
+		for j := 0; j < len(list); j++ {
+			if strings.Contains(fmtVar[1:], list[j]) {
+				funcIsExist = true
+			}
+		}
 
 		if err != nil {
 			return nil, err
@@ -28,19 +35,22 @@ func (d Definition) SettersPhp() ([]byte, error) {
 		stringVar := string(fmtVar)
 		localVar := fmt.Sprintf("%v%v", strings.ToLower(stringVar[:2]), stringVar[2:])
 
-		if strings.ToLower(varType) == "bool" || strings.ToLower(varType) == "boolean" {
-			settersDef = []byte("\n\tpublic function setIs" + fmtVar[1:] + "(" + checkTypeByValue(varType) + " " + localVar + ")" +
-				"\n\t{" +
-				"\n\t\t$this->" + varName[1:] + " = " + localVar + ";" +
-				"\n\t}\n")
-		} else {
-			settersDef = []byte("\n\tpublic function set" + fmtVar[1:] + "(" + checkTypeByValue(varType) + " " + localVar + ")" +
-				"\n\t{" +
-				"\n\t\t$this->" + varName[1:] + " = " + localVar + ";" +
-				"\n\t}\n")
+		if !funcIsExist {
+			if strings.ToLower(varType) == "bool" || strings.ToLower(varType) == "boolean" {
+				settersDef = []byte("\n\tpublic function setIs" + fmtVar[1:] + "(" + checkTypeByValue(varType) + " " + localVar + ")" +
+					"\n\t{" +
+					"\n\t\t$this->" + varName[1:] + " = " + localVar + ";" +
+					"\n\t}\n")
+			} else {
+				settersDef = []byte("\n\tpublic function set" + fmtVar[1:] + "(" + checkTypeByValue(varType) + " " + localVar + ")" +
+					"\n\t{" +
+					"\n\t\t$this->" + varName[1:] + " = " + localVar + ";" +
+					"\n\t}\n")
+			}
+
+			setters = append(setters, settersDef...)
 		}
 
-		setters = append(setters, settersDef...)
 	}
 	return setters, nil
 }

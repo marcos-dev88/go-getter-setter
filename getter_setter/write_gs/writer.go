@@ -45,11 +45,8 @@ func (w Writer) WriteGettersAndSetters() error {
 		}
 	}(file)
 
-	getterCreatedList, err := w.Definition.CheckWroteGettersAndSetters("GETTER", *file)
-	getters, err := w.Definition.GenFunctionGetByLanguage(getterCreatedList)
-
-	setterCreatedList, err := w.Definition.CheckWroteGettersAndSetters("SETTER", *file)
-	setters, err := w.Definition.GenFunctionSetByLanguage(setterCreatedList)
+	getters, err := w.Definition.GenFunctionGetByFileAndLang()
+	setters, err := w.Definition.GenFunctionSetByFileAndLang()
 
 	if err != nil {
 		return err

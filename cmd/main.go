@@ -18,6 +18,6 @@ func main() {
 	if err != nil {
 		logger.NewLog("error", "error: ", err)
 	} else {
-		logger.NewLog("debug", "All Getter and setters has been created!", nil)
+		logger.NewLog("alert", "All Getter and setters has been created!", nil)
 	}
 }
