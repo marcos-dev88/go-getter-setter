@@ -1,11 +1,7 @@
 package write_gs
 
 import (
-	"bufio"
-	"io"
 	"os"
-	"regexp"
-	"strings"
 
 	"github.com/marcos-dev88/go-getter-setter/getter_setter/definition"
 	"github.com/marcos-dev88/go-getter-setter/getter_setter/logger"
@@ -17,12 +13,6 @@ type (
 	Write interface {
 		WriteGettersAndSetters() error
 	}
-
-	CheckWrite interface {
-		CheckWroteGetters(getters []byte, file os.File) error
-		CheckWroteSetters(setters []byte, file os.File) error
-	}
-
 	Writer struct {
 		Definition definition.Definition
 		Logger     logger.Logging
@@ -55,33 +45,11 @@ func (w Writer) WriteGettersAndSetters() error {
 		}
 	}(file)
 
-	f := bufio.NewReader(file)
+	getterCreatedList, err := w.Definition.CheckWroteGettersAndSetters("GETTER", *file)
+	getters, err := w.Definition.GenFunctionGetByLanguage(getterCreatedList)
 
-	var list []string
-
-	findNameFunc := regexp.MustCompile(`public function (get|is)([a-zA-Z]+)`)
-
-	for {
-		line, err := f.ReadString('\n')
-		line = strings.TrimSpace(line)
-		l := strings.Split(line, "\n")
-
-		for i := 0; i < len(l); i++ {
-			if strings.Contains(l[i], "function") {
-				math := findNameFunc.FindStringSubmatch(l[i]) // fmt.Println(l[i])
-				if math != nil {
-					list = append(list, math[2])
-				}
-			}
-		}
-
-		if err == io.EOF {
-			break
-		}
-	}
-
-	getters, err := w.Definition.GettersPhp(list)
-	setters, err := w.Definition.SettersPhp()
+	setterCreatedList, err := w.Definition.CheckWroteGettersAndSetters("SETTER", *file)
+	setters, err := w.Definition.GenFunctionSetByLanguage(setterCreatedList)
 
 	if err != nil {
 		return err
@@ -118,17 +86,17 @@ func removeLastBraces(filePath string) error {
 		return err
 	}
 
-	lines := strings.Split(string(in), "\n")
+	functionContent := string(in)
 
-	for k, line := range lines {
-		if strings.Contains(line, "}") {
-			lines[k] = ""
-		}
+	size := len(functionContent)
+
+	if size > 0 && functionContent[size-2] == '}' {
+		functionContent = functionContent[:size-2]
+	} else if size > 0 && functionContent[size-1] == '}' {
+		functionContent = functionContent[:size-1]
 	}
 
-	newFileContent := strings.Join(lines, "\n")
-
-	err = os.WriteFile(filePath, []byte(newFileContent), 0766)
+	err = os.WriteFile(filePath, []byte(functionContent), 0766)
 
 	if err != nil {
 		return err
