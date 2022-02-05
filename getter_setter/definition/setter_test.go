@@ -7,7 +7,8 @@ import (
 
 func Test_SettersPhp(t *testing.T) {
 	t.Run("Test_setters_php_definition", func(t *testing.T) {
-		setters, err := definitionEntityMock.SettersPhp()
+		list := make([]string, 128)
+		setters, err := definitionEntityMock.SettersPhp(list)
 
 		if err != nil {
 			log.Fatalf("\nerror: %v", err)
@@ -22,8 +23,8 @@ func Test_SettersPhp(t *testing.T) {
 		if err != nil {
 			t.Errorf("error: %v", err)
 		}
-
-		setters, err := definitionEntityMockLocal.SettersPhp()
+		list := make([]string, 128)
+		setters, err := definitionEntityMockLocal.SettersPhp(list)
 
 		if err != nil {
 			t.Errorf("error: %v", err)

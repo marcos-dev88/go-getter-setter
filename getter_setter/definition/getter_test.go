@@ -9,7 +9,8 @@ func TestGetter(t *testing.T) {
 
 	t.Run("Test_GettersPhp", func(t *testing.T) {
 
-		gettersPHP, err := definitionEntityMock.GettersPhp()
+		list := make([]string, 128)
+		gettersPHP, err := definitionEntityMock.GettersPhp(list)
 
 		if err != nil {
 			log.Fatalf("\nerror: %v", err)
@@ -25,7 +26,8 @@ func TestGetter(t *testing.T) {
 			t.Errorf("error: %v", err)
 		}
 
-		gettersPHP, err := definitionEntityMockLocal.GettersPhp()
+		list := make([]string, 128)
+		gettersPHP, err := definitionEntityMockLocal.GettersPhp(list)
 
 		if err != nil {
 			t.Errorf("error: %v", err)
