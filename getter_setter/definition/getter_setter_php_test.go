@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-func TestGetterSetterGenerator(t *testing.T) {
+func Test_GetterSetterGenerator(t *testing.T) {
 
 	t.Run("Test_GettersSetersPhp", func(t *testing.T) {
 
