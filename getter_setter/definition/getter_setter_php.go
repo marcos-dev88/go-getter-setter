@@ -8,8 +8,6 @@ import (
 	"github.com/marcos-dev88/go-getter-setter/getter_setter/file_gs"
 )
 
-type FunctionType int8
-
 func (d Definition) GettersSettersPhp(listWroteFuncs map[string][]string) ([]byte, error) {
 	var setters = make([]byte, len(d.File.Attributes))
 	var getters = make([]byte, len(d.File.Attributes))

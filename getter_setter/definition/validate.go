@@ -8,6 +8,8 @@ import (
 	"strings"
 )
 
+type FunctionType int8
+
 const (
 	UndefinedType FunctionType = iota
 	GetterType
