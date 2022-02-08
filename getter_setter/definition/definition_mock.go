@@ -22,6 +22,9 @@ var attrs = []fgs.Attribute{
 var fileEntityMock = fgs.NewFileGs("some/path", "php", "private", "all", attrs, logg)
 var fileLocalMock = fgs.NewFileGs("../../testFiles/testPhpFile.php", "php", "private", "all", []fgs.Attribute{}, logg)
 
+var fileLocalMockGet = fgs.NewFileGs("../../testFiles/testPhpFile.php", "php", "private", "get", []fgs.Attribute{}, logg)
+var fileLocalMockSet = fgs.NewFileGs("../../testFiles/testPhpFile.php", "php", "private", "set", []fgs.Attribute{}, logg)
+
 var fileMock = fileMockTest{fileEntityMock}
 
 type definitionMock struct {
@@ -30,3 +33,5 @@ type definitionMock struct {
 
 var definitionEntityMock = NewDefinition(fileEntityMock, logg)
 var definitionEntityMockLocal = NewDefinition(fileLocalMock, logg)
+var definitionEntityMockLocalGetOnly = NewDefinition(fileLocalMockGet, logg)
+var definitionEntityMockLocalSetOnly = NewDefinition(fileLocalMockSet, logg)
