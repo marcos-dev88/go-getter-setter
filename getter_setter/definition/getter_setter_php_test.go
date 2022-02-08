@@ -9,7 +9,7 @@ func TestGetterSetterGenerator(t *testing.T) {
 
 	t.Run("Test_GettersSetersPhp", func(t *testing.T) {
 
-		list := make([]string, 128)
+		list := make(map[string][]string, 128)
 		gettersPHP, err := definitionEntityMock.GettersSettersPhp(list)
 
 		if err != nil {
@@ -26,7 +26,7 @@ func TestGetterSetterGenerator(t *testing.T) {
 			t.Errorf("error: %v", err)
 		}
 
-		list := make([]string, 128)
+		list := make(map[string][]string, 128)
 		gettersPHP, err := definitionEntityMockLocal.GettersSettersPhp(list)
 
 		if err != nil {

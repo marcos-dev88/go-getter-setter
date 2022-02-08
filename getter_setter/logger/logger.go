@@ -17,6 +17,8 @@ const (
 	_
 	Debuggers
 	_
+	Diebuggers
+	_
 	Alerts
 	_
 	Errors
@@ -25,6 +27,7 @@ const (
 const (
 	Logger LogLabel = "LOG"
 	Debug  LogLabel = "DEBUG"
+	Diebug LogLabel = "DIEBUG"
 	Alert  LogLabel = "ALERT"
 	Error  LogLabel = "ERROR"
 )
@@ -50,6 +53,8 @@ func (l logs) NewLog(level string, msg string, data ...interface{}) {
 		l.GenerateLog(Logger, msg, data)
 	case Debuggers:
 		l.GenerateLog(Debug, msg, data)
+	case Diebuggers:
+		l.GenerateLog(Diebug, msg, data)
 	case Errors:
 		l.GenerateLog(Error, msg, data)
 	case Alerts:
@@ -76,6 +81,9 @@ func (l logs) GenerateLog(level LogLabel, message string, data ...interface{}) {
 			outReturn = out
 		}
 	}
+	if level == Diebug {
+		log.Fatal("\n", string(outReturn), "\n")
+	}
 	log.Print("\n", string(outReturn), "\n")
 }
 
@@ -93,6 +101,8 @@ func colorByLabel(level LogLabel) string {
 		return "[32m"
 	case "DEBUG":
 		return "[36m"
+	case "DIEBUG":
+		return "[36m"
 	case "ALERT":
 		return "[33m"
 	case "ERROR":
@@ -108,10 +118,12 @@ func filterLogginglevel(level string) LogLevel {
 		return 2
 	case strings.ToLower(level) == "debug":
 		return 4
-	case strings.ToLower(level) == "alert":
+	case strings.ToLower(level) == "diebug":
 		return 6
-	case strings.ToLower(level) == "error":
+	case strings.ToLower(level) == "alert":
 		return 8
+	case strings.ToLower(level) == "error":
+		return 10
 	default:
 		return 0
 	}
