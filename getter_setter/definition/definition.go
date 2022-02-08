@@ -1,20 +1,11 @@
 package definition
 
 import (
-	"bufio"
-	"io"
-	"log"
-	"os"
 	"regexp"
 	"strings"
 
 	fgs "github.com/marcos-dev88/go-getter-setter/getter_setter/file_gs"
 	"github.com/marcos-dev88/go-getter-setter/getter_setter/logger"
-)
-
-const (
-	Getter string = "GETTER"
-	Setter string = "SETTER"
 )
 
 type (
@@ -28,6 +19,10 @@ type (
 
 	CheckFunctions interface {
 		CheckWroteGettersAndSetters() ([]string, error)
+	}
+
+	FunctionDefinitionGetSet interface {
+		GettersSettersPhp(listWroteFuncs map[string][]string) ([]byte, error)
 	}
 
 	Definition struct {
@@ -85,61 +80,4 @@ func (d *Definition) DefineFileGsAttributes() error {
 	d.File.Attributes = attrArr
 
 	return nil
-}
-
-func (d Definition) CheckWroteGettersAndSetters() ([]string, error) {
-	file, err := os.OpenFile(d.File.Path, os.O_APPEND|os.O_RDWR, 0766)
-
-	defer func(file *os.File) {
-		err := file.Close()
-		if err != nil {
-			if err.Error() == "invalid argument" {
-				d.Logger.NewLog("error", "file is undefined or not found, try update the path.", err)
-			}
-			d.Logger.NewLog("error", "error: ", err)
-		}
-	}(file)
-
-	if err != nil {
-		return nil, err
-	}
-
-	buffReader := bufio.NewReader(file)
-
-	var list []string
-
-	findNameFuncRegexGet := regexp.MustCompile(`public function (get|is)([a-zA-Z]+)`)
-	findNameFuncRegexSet := regexp.MustCompile(`public function set([a-zA-Z]+)`)
-
-	for {
-		line, err := buffReader.ReadString('\n')
-		line = strings.TrimSpace(line)
-		l := strings.Split(line, "\n")
-
-		for i := 0; i < len(l); i++ {
-			if strings.Contains(l[i], "function") {
-
-				matchGet := findNameFuncRegexGet.FindStringSubmatch(l[i])
-				if len(matchGet) > 0 {
-					if matchGet != nil {
-						list = append(list, matchGet[2])
-					}
-				}
-				matchSet := findNameFuncRegexSet.FindStringSubmatch(l[i])
-				if matchSet != nil {
-					if len(matchSet) > 0 {
-						log.Printf("%v", len(matchSet[1]))
-						list = append(list, matchSet[1])
-					}
-				}
-
-			}
-		}
-
-		if err == io.EOF {
-			break
-		}
-	}
-
-	return list, nil
 }
