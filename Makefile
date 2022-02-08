@@ -1,2 +1,3 @@
 run: 
-	go run cmd/main.go
+	go build -ldflags "-s -w" -o ./bin/getset cmd/*.go;
+	./bin/getset

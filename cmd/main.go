@@ -9,7 +9,7 @@ import (
 func main() {
 	logger := logger.NewLogging()
 
-	file := file_gs.NewFileGs("./testFiles/testPhpFile.php", "php", "private", []file_gs.Attribute{}, logger)
+	file := file_gs.NewFileGs("./testFiles/testPhpFile.php", "php", "private", "all", []file_gs.Attribute{}, logger)
 	co := di.NewContainer(file)
 
 	writer := co.GetWriter()

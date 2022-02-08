@@ -19,13 +19,13 @@ var attrs = []fgs.Attribute{
 	fgs.NewAttribute("$TestVar", "double"),
 }
 
-var fileEntityMock = fgs.NewFileGs("some/path", "php", "private", attrs, logg)
-var fileLocalMock = fgs.NewFileGs("../../testFiles/testPhpFile.php", "php", "private", []fgs.Attribute{}, logg)
+var fileEntityMock = fgs.NewFileGs("some/path", "php", "private", "all", attrs, logg)
+var fileLocalMock = fgs.NewFileGs("../../testFiles/testPhpFile.php", "php", "private", "all", []fgs.Attribute{}, logg)
 
 var fileMock = fileMockTest{fileEntityMock}
 
 type definitionMock struct {
-	FunctionDefinitionGet
+	FunctionDefinitionGetSet
 }
 
 var definitionEntityMock = NewDefinition(fileEntityMock, logg)

@@ -23,20 +23,17 @@ type (
 	}
 
 	GenerateFunction interface {
-		GenFunctionGetByFileAndLang() ([]byte, error)
-		GenFunctionSetByFileAndLang() ([]byte, error)
+		GenFunctionGetAndSetByFileAndLang() ([]byte, error)
 	}
 
 	CheckFunctions interface {
-		CheckWroteGetters() ([]string, error)
-		CheckWroteSetters() ([]string, error)
+		CheckWroteGettersAndSetters() ([]string, error)
 	}
 
 	Definition struct {
 		File   fgs.FileGs
 		Logger logger.Logging
-		FunctionDefinitionGet
-		FunctionDefinitionSet
+		FunctionDefinitionGetSet
 	}
 )
 
@@ -44,29 +41,11 @@ func NewDefinition(file fgs.FileGs, logger logger.Logging) Definition {
 	return Definition{File: file, Logger: logger}
 }
 
-func (d Definition) GenFunctionGetByFileAndLang() ([]byte, error) {
+func (d Definition) GenFunctionGetAndSetByFileAndLang() ([]byte, error) {
 
-	wroteGetterList, _ := d.CheckWroteGetters()
+	wroteGetterList, _ := d.CheckWroteGettersAndSetters()
 
-	gphp, err := d.GettersPhp(wroteGetterList)
-
-	if err != nil {
-		d.Logger.NewLog("error", "err: ", err)
-		return nil, err
-	}
-
-	languages := map[string][]byte{
-		"php": gphp,
-	}
-
-	return languages[d.File.Language], nil
-}
-
-func (d Definition) GenFunctionSetByFileAndLang() ([]byte, error) {
-
-	wroteSetterList, _ := d.CheckWroteSetters()
-
-	sphp, err := d.SettersPhp(wroteSetterList)
+	gsphp, err := d.GettersSettersPhp(wroteGetterList)
 
 	if err != nil {
 		d.Logger.NewLog("error", "err: ", err)
@@ -74,7 +53,7 @@ func (d Definition) GenFunctionSetByFileAndLang() ([]byte, error) {
 	}
 
 	languages := map[string][]byte{
-		"php": sphp,
+		"php": gsphp,
 	}
 
 	return languages[d.File.Language], nil
@@ -108,51 +87,7 @@ func (d *Definition) DefineFileGsAttributes() error {
 	return nil
 }
 
-func (d Definition) CheckWroteGetters() ([]string, error) {
-	file, err := os.OpenFile(d.File.Path, os.O_APPEND|os.O_RDWR, 0766)
-
-	defer func(file *os.File) {
-		err := file.Close()
-		if err != nil {
-			if err.Error() == "invalid argument" {
-				d.Logger.NewLog("error", "file is undefined or not found, try update the path.", err)
-			}
-			d.Logger.NewLog("error", "error: ", err)
-		}
-	}(file)
-
-	if err != nil {
-		return nil, err
-	}
-
-	buffReader := bufio.NewReader(file)
-	var list []string
-
-	findNameFuncRegex := regexp.MustCompile(`public function (get|is)([a-zA-Z]+)`)
-
-	for {
-		line, err := buffReader.ReadString('\n')
-		line = strings.TrimSpace(line)
-		l := strings.Split(line, "\n")
-
-		for i := 0; i < len(l); i++ {
-			if strings.Contains(l[i], "function") {
-				math := findNameFuncRegex.FindStringSubmatch(l[i])
-				if math != nil {
-					list = append(list, math[2])
-				}
-			}
-		}
-
-		if err == io.EOF {
-			break
-		}
-	}
-
-	return list, nil
-}
-
-func (d Definition) CheckWroteSetters() ([]string, error) {
+func (d Definition) CheckWroteGettersAndSetters() ([]string, error) {
 	file, err := os.OpenFile(d.File.Path, os.O_APPEND|os.O_RDWR, 0766)
 
 	defer func(file *os.File) {
@@ -173,21 +108,31 @@ func (d Definition) CheckWroteSetters() ([]string, error) {
 
 	var list []string
 
-	findNameFuncRegex := regexp.MustCompile(`public function set([a-zA-Z]+)`)
+	findNameFuncRegexGet := regexp.MustCompile(`public function (get|is)([a-zA-Z]+)`)
+	findNameFuncRegexSet := regexp.MustCompile(`public function set([a-zA-Z]+)`)
 
 	for {
 		line, err := buffReader.ReadString('\n')
 		line = strings.TrimSpace(line)
 		l := strings.Split(line, "\n")
 
-		log.Fatalf("%v", l)
 		for i := 0; i < len(l); i++ {
 			if strings.Contains(l[i], "function") {
-				math := findNameFuncRegex.FindStringSubmatch(l[i])
-				// log.Fatal(l[i])
-				if math != nil {
-					list = append(list, math[2])
+
+				matchGet := findNameFuncRegexGet.FindStringSubmatch(l[i])
+				if len(matchGet) > 0 {
+					if matchGet != nil {
+						list = append(list, matchGet[2])
+					}
 				}
+				matchSet := findNameFuncRegexSet.FindStringSubmatch(l[i])
+				if matchSet != nil {
+					if len(matchSet) > 0 {
+						log.Printf("%v", len(matchSet[1]))
+						list = append(list, matchSet[1])
+					}
+				}
+
 			}
 		}
 

@@ -5,12 +5,12 @@ import (
 	"testing"
 )
 
-func TestGetter(t *testing.T) {
+func TestGetterSetterGenerator(t *testing.T) {
 
-	t.Run("Test_GettersPhp", func(t *testing.T) {
+	t.Run("Test_GettersSetersPhp", func(t *testing.T) {
 
 		list := make([]string, 128)
-		gettersPHP, err := definitionEntityMock.GettersPhp(list)
+		gettersPHP, err := definitionEntityMock.GettersSettersPhp(list)
 
 		if err != nil {
 			log.Fatalf("\nerror: %v", err)
@@ -19,7 +19,7 @@ func TestGetter(t *testing.T) {
 		log.Printf("\ngetters: \n %v", string(gettersPHP))
 	})
 
-	t.Run("Test_GettersPHP_FileCreatedMock", func(t *testing.T) {
+	t.Run("Test_GettersSetersPHP_FileCreatedMock", func(t *testing.T) {
 		err := definitionEntityMockLocal.DefineFileGsAttributes()
 
 		if err != nil {
@@ -27,7 +27,7 @@ func TestGetter(t *testing.T) {
 		}
 
 		list := make([]string, 128)
-		gettersPHP, err := definitionEntityMockLocal.GettersPhp(list)
+		gettersPHP, err := definitionEntityMockLocal.GettersSettersPhp(list)
 
 		if err != nil {
 			t.Errorf("error: %v", err)
