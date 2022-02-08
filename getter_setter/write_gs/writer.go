@@ -45,19 +45,14 @@ func (w Writer) WriteGettersAndSetters() error {
 		}
 	}(file)
 
-	getters, err := w.Definition.GenFunctionGetByFileAndLang()
-	setters, err := w.Definition.GenFunctionSetByFileAndLang()
+	generatedFuncs, err := w.Definition.GenFunctionGetAndSetByFileAndLang()
 
 	if err != nil {
 		return err
 	}
 
-	removeZeroByteVal(getters)
-	removeZeroByteVal(setters)
-	_, err = file.Write([]byte("//Getters"))
-	_, err = file.Write(getters)
-	_, err = file.Write([]byte("\n//Setters"))
-	_, err = file.Write(setters)
+	removeZeroByteVal(generatedFuncs)
+	_, err = file.Write(generatedFuncs)
 	_, err = file.Write([]byte("\n}"))
 
 	if err != nil {
