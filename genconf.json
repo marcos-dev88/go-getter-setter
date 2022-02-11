@@ -1,0 +1,14 @@
+{
+    "files": [
+        {
+            "path": "./testFiles",
+            "visibility": "private",
+            "functions": "all"
+        },
+        {
+            "path": "./testFiles/testPhpFile.php",
+            "visibility": "private",
+            "functions": "all"
+        }
+    ]
+}
