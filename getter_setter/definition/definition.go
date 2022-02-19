@@ -1,6 +1,7 @@
 package definition
 
 import (
+	"path/filepath"
 	"regexp"
 	"strings"
 
@@ -11,6 +12,7 @@ import (
 type (
 	Definitions interface {
 		DefineFileGsAttributes() error
+		DefineLanguageExtension()
 	}
 
 	GenerateFunction interface {
@@ -80,4 +82,11 @@ func (d *Definition) DefineFileGsAttributes() error {
 	d.File.Attributes = attrArr
 
 	return nil
+}
+
+func (d *Definition) DefineLanguageExtension() {
+	extFile := strings.Replace(filepath.Ext(d.File.Path), ".", "", -1)
+	if len(extFile) != 0 {
+		d.File.Language = extFile
+	}
 }
