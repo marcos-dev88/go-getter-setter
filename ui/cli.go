@@ -2,13 +2,21 @@ package ui
 
 import (
 	"encoding/json"
+	"fmt"
 	"os"
 	"path/filepath"
+	"reflect"
 	"strings"
 
 	"github.com/marcos-dev88/go-getter-setter/getter_setter/di"
 	"github.com/marcos-dev88/go-getter-setter/getter_setter/file_gs"
 	"github.com/marcos-dev88/go-getter-setter/getter_setter/logger"
+)
+
+const (
+	GetterFunction string = "get"
+	SetterFunction string = "set"
+	AllFunctions   string = "all"
 )
 
 type (
@@ -17,21 +25,19 @@ type (
 	}
 
 	GeneateByCLI interface {
-		GenerateGetters(params ...string) error
-		GenerateSetters(params ...string) error
-		GenerateAll(params ...string) error
+		GenerateCLI(path, functions string) error
 	}
 )
 
-type cli struct {
+type Cli struct {
 	Log logger.Logging
 }
 
-func NewCli(logg logger.Logging) cli {
-	return cli{Log: logg}
+func NewCli(logg logger.Logging) Cli {
+	return Cli{Log: logg}
 }
 
-func (c cli) Generate() error {
+func (c Cli) Generate() error {
 	fileConfJson, err := os.ReadFile("./genconf.json")
 
 	fileConf := file_gs.NewFilesConf(nil)
@@ -79,20 +85,19 @@ func (c cli) Generate() error {
 	return nil
 }
 
-func (c cli) GenerateAll(params ...string) error {
-	// Do a for here to get all files in config file
-	file := file_gs.NewFileGs("./testFiles/testPhpFile.php", "php", "private", "all", []file_gs.Attribute{}, c.Log)
+func (c Cli) GenerateCLI(path, functions string) error {
+	err := CheckFucntionParam(functions)
+
+	if err != nil {
+		return err
+	}
+
+	file := file_gs.NewFileGs(path, "", "private", functions, []file_gs.Attribute{}, c.Log)
 	co := di.NewContainer(file)
 
 	writer := co.GetWriter()
 
-	err := writer.WriteGettersAndSetters()
-
-	if err != nil {
-		return err
-	} else {
-		c.Log.NewLog("alert", "All Getter and setters has been created!", nil)
-	}
+	err = writer.WriteGettersAndSetters()
 
 	return nil
 }
@@ -121,4 +126,18 @@ func getFileSliceByPath(fileGs file_gs.FileGs) error {
 		}
 	}
 	return nil
+}
+
+func CheckFucntionParam(function string) error {
+
+	switch {
+	case reflect.DeepEqual(function, GetterFunction):
+		fallthrough
+	case reflect.DeepEqual(function, SetterFunction):
+		fallthrough
+	case reflect.DeepEqual(function, AllFunctions):
+		return nil
+	default:
+		return fmt.Errorf("error: %v is an invalid function to generate, try to use: get, set or all", function)
+	}
 }

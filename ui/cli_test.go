@@ -8,7 +8,6 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/marcos-dev88/go-getter-setter/getter_setter/di"
 	"github.com/marcos-dev88/go-getter-setter/getter_setter/file_gs"
 )
 
@@ -68,35 +67,9 @@ func Test_Generate(t *testing.T) {
 		for i := 0; i < len(resultFiles.Files); i++ {
 			log.Printf("test -> %v\n", resultFiles.Files[i].Path)
 			if len(resultFiles.Files[i].Language) == 0 {
-				GetFileSliceByPath(resultFiles.Files[i])
+				getFileSliceByPath(resultFiles.Files[i])
 			}
 		}
 	})
-}
 
-func GetFileSliceByPath(fileGs file_gs.FileGs) {
-	var some []file_gs.FileGs
-	filesInPath, _ := os.ReadDir("../" + fileGs.Path)
-	for _, file := range filesInPath {
-		newPath := fileGs.Path + "/" + file.Name()
-		fileExt := strings.Replace(filepath.Ext(newPath), ".", "", -1)
-		fileGs.Language = fileExt
-		some = append(some, file_gs.NewFileGs(newPath, fileGs.Language, fileGs.Visibility, fileGs.Functions, []file_gs.Attribute{}, nil))
-	}
-
-	for i := 0; i < len(some); i++ {
-		if len(some[i].Path) > 0 {
-			co := di.NewContainer(some[i])
-
-			writer := co.GetWriter()
-
-			err := writer.WriteGettersAndSetters()
-
-			if err != nil {
-				log.Fatalf("error -> %v", err)
-			}
-		}
-	}
-
-	log.Printf("some -> %v", some)
 }

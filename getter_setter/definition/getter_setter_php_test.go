@@ -2,6 +2,7 @@ package definition
 
 import (
 	"log"
+	"reflect"
 	"testing"
 )
 
@@ -26,6 +27,12 @@ func Test_GetterSetterGenerator(t *testing.T) {
 			t.Errorf("error: %v", err)
 		}
 
+		definitionEntityMockLocal.DefineLanguageExtension()
+
+		if !reflect.DeepEqual(definitionEntityMockLocal.File.Language, "php") {
+			t.Errorf("we want a php extension and %v found", definitionEntityMockLocal.File.Language)
+		}
+
 		list := make(map[string][]string, 128)
 		gettersPHP, err := definitionEntityMockLocal.GettersSettersPhp(list)
 
@@ -40,6 +47,12 @@ func Test_GetterSetterGenerator(t *testing.T) {
 		err := definitionEntityMockLocalGetOnly.DefineFileGsAttributes()
 		if err != nil {
 			t.Errorf("error: %v", err)
+		}
+
+		definitionEntityMockLocalGetOnly.DefineLanguageExtension()
+
+		if !reflect.DeepEqual(definitionEntityMockLocalGetOnly.File.Language, "php") {
+			t.Errorf("we want a php extension and %v found", definitionEntityMockLocalGetOnly.File.Language)
 		}
 
 		list := make(map[string][]string, 128)
@@ -57,6 +70,12 @@ func Test_GetterSetterGenerator(t *testing.T) {
 
 		if err != nil {
 			t.Errorf("error: %v", err)
+		}
+
+		definitionEntityMockLocalSetOnly.DefineLanguageExtension()
+
+		if !reflect.DeepEqual(definitionEntityMockLocalSetOnly.File.Language, "php") {
+			t.Errorf("we want a php extension and %v found", definitionEntityMockLocalSetOnly.File.Language)
 		}
 
 		list := make(map[string][]string, 128)

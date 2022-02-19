@@ -1,6 +1,7 @@
 # Folders
 .vscode/
 .idea/
+bin/
 
 # Files
 .env
