@@ -31,6 +31,8 @@ func (w Writer) WriteGettersAndSetters() error {
 		return err
 	}
 
+	w.Definition.DefineLanguageExtension()
+
 	err = removeLastBraces(w.Definition.File.Path)
 
 	file, err := os.OpenFile(w.Definition.File.Path, os.O_APPEND|os.O_RDWR, 0766)
