@@ -19,9 +19,9 @@ func main() {
 	}
 
 	genByFile := flag.NewFlagSet("gbf", flag.ExitOnError)
-	genByCmdGet := flag.NewFlagSet("gbgo", flag.ExitOnError)
-	genByCmdSet := flag.NewFlagSet("gbso", flag.ExitOnError)
-	genByCmdAll := flag.NewFlagSet("gba", flag.ExitOnError)
+	genByCmdG := flag.NewFlagSet("gbc", flag.ExitOnError)
+	path := genByCmdG.String("path", "", "define your file path to generate the choose functions")
+	functionToGen := genByCmdG.String("fn", "", "define the functions to generate: get, set or all (for both)")
 
 	switch strings.ToLower(os.Args[1]) {
 	case "gbf":
@@ -41,48 +41,32 @@ func main() {
 
 		os.Exit(1)
 
-	case "gbgo":
-		if err := genByCmdGet.Parse(os.Args[2:]); err != nil {
+	case "gbc":
+		if err := genByCmdG.Parse(os.Args[2:]); err != nil {
 			cli.Log.NewLog("error", "error: ", err)
 			os.Exit(0)
 		}
 
-		cli.Generate()
-
-		cli.Log.NewLog("alert", "All Getters has been created!\n", nil)
-
-		os.Exit(1)
-	case "gbso":
-		if err := genByCmdSet.Parse(os.Args[2:]); err != nil {
-			cli.Log.NewLog("error", "error: ", err)
-			os.Exit(0)
-		}
-
-		cli.Generate()
-
-		cli.Log.NewLog("alert", "All Setters has been created!\n", nil)
-
-		os.Exit(1)
-
-	case "gba":
-		if err := genByCmdAll.Parse(os.Args[2:]); err != nil {
-			cli.Log.NewLog("error", "error: ", err)
-			os.Exit(0)
-		}
-
-		err := cli.GenerateAll()
+		err := cli.GenerateCLI(*path, *functionToGen)
 
 		if err != nil {
 			cli.Log.NewLog("error", "error: ", err)
 			os.Exit(0)
 		}
 
-		cli.Log.NewLog("alert", "All Getters and setters has been created!\n", nil)
+		switch *functionToGen {
+		case "get":
+			cli.Log.NewLog("alert", "All Getters has been created!\n", nil)
+		case "set":
+			cli.Log.NewLog("alert", "All Setters has been created!\n", nil)
+		case "all":
+			cli.Log.NewLog("alert", "All Getters and Setters has been created!\n", nil)
+		}
 
 		os.Exit(1)
 
 	default:
-		cli.Log.NewLog("error", "error: flag invalid, try to use one of these: gba | gbso | gbgo | gbf")
+		cli.Log.NewLog("error", "error: flag invalid, try to use one of these: gbc | gbf")
 		os.Exit(0)
 	}
 }
