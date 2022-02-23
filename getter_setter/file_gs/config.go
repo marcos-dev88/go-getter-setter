@@ -20,7 +20,7 @@ type (
 func (f FileGs) GetFileAttributes() ([]byte, error) {
 	file, err := os.Open(f.Path)
 
-	var regexAttr = regexp.MustCompile(fmt.Sprintf(`%v (\S+) = (\S+);`, f.Visibility)) // Soon will have regex for each languange
+	var regexAttr = regexp.MustCompile(fmt.Sprintf(`%v[\s\S]* (\S+)[\s\S]* =[\s\S]* (\S+)`, f.Visibility)) // Soon will have regex for each languange
 
 	var attrByteArr = make([]byte, 2048)
 
