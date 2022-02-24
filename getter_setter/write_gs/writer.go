@@ -7,7 +7,7 @@ import (
 	"github.com/marcos-dev88/go-getter-setter/getter_setter/logger"
 )
 
-const EmptyStringByteValue = 32
+const EmptyByteValue = 0
 
 type (
 	Write interface {
@@ -31,8 +31,6 @@ func (w Writer) WriteGettersAndSetters() error {
 		return err
 	}
 
-	w.Definition.DefineLanguageExtension()
-
 	err = removeLastBraces(w.Definition.File.Path)
 
 	file, err := os.OpenFile(w.Definition.File.Path, os.O_APPEND|os.O_RDWR, 0766)
@@ -53,8 +51,7 @@ func (w Writer) WriteGettersAndSetters() error {
 		return err
 	}
 
-	removeZeroByteVal(generatedFuncs)
-	_, err = file.Write(generatedFuncs)
+	_, err = file.Write(removeZeroByteVal(generatedFuncs))
 	_, err = file.Write([]byte("\n}"))
 
 	if err != nil {
@@ -64,13 +61,14 @@ func (w Writer) WriteGettersAndSetters() error {
 	return nil
 }
 
-func removeZeroByteVal(data []byte) {
+func removeZeroByteVal(data []byte) []byte {
+	var returnVal []byte
 	for i := 0; i < len(data); i++ {
-		if data[i] == 0 {
-			data[i] = byte(EmptyStringByteValue)
+		if data[i] != EmptyByteValue {
+			returnVal = append(returnVal, data[i])
 		}
 	}
-
+	return returnVal
 }
 
 func removeLastBraces(filePath string) error {
