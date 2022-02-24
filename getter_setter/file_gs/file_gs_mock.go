@@ -16,7 +16,7 @@ var fileGsEntityMock = NewFileGs(
 )
 
 var fileGsEntityMockLocal = NewFileGs(
-	"../../testFiles/testPhpFile.php",
+	"../../testFiles/php/testPhpFile.php",
 	"php",
 	"private",
 	"all",

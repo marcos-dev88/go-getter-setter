@@ -7,6 +7,10 @@ import (
 	"regexp"
 )
 
+const (
+	regexPHPSeven = `[\s\S]* (\S+)[\s\S]* =[\s\S]* (\S+)`
+)
+
 type (
 	LanguageConfig interface {
 		GetAttributeFilter() string
@@ -20,7 +24,13 @@ type (
 func (f FileGs) GetFileAttributes() ([]byte, error) {
 	file, err := os.Open(f.Path)
 
-	var regexAttr = regexp.MustCompile(fmt.Sprintf(`%v[\s\S]* (\S+)[\s\S]* =[\s\S]* (\S+)`, f.Visibility)) // Soon will have regex for each languange
+	regexLang, err := choseRegexByLanguage(f.Language)
+
+	if err != nil {
+		return nil, err
+	}
+
+	var regexAttr = regexp.MustCompile(fmt.Sprintf(`%s%s`, f.Visibility, regexLang)) // Soon will have regex for each languange
 
 	var attrByteArr = make([]byte, 2048)
 
@@ -49,4 +59,19 @@ func (f FileGs) GetFileAttributes() ([]byte, error) {
 	}
 
 	return attrByteArr, nil
+}
+
+func choseRegexByLanguage(language string) (string, error) {
+	regexLang := map[string]string{
+		"php":  regexPHPSeven,
+		"java": "",
+	}
+
+	value, ok := regexLang[language]
+
+	if !ok {
+		return "", fmt.Errorf("this script doesn't support this language yet :(\n please, create an issue")
+	}
+
+	return value, nil
 }

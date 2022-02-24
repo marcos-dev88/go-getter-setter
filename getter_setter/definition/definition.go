@@ -59,7 +59,10 @@ func (d Definition) GenFunctionGetAndSetByFileAndLang() ([]byte, error) {
 func (d *Definition) DefineFileGsAttributes() error {
 	var regexAttr = regexp.MustCompile(`var_name: (\S+) - type: (\S+)`)
 
+	d.DefineLanguageExtension()
+
 	attrs, err := d.File.GetFileAttributes()
+
 	var attributesStringArr = strings.Split(string(attrs), "|")
 
 	var attrArr []fgs.Attribute

@@ -20,10 +20,10 @@ var attrs = []fgs.Attribute{
 }
 
 var fileEntityMock = fgs.NewFileGs("some/path", "", "private", "all", attrs, logg)
-var fileLocalMock = fgs.NewFileGs("../../testFiles/testPhpFile.php", "", "private", "all", []fgs.Attribute{}, logg)
+var fileLocalMock = fgs.NewFileGs("../../testFiles/php/testPhpFile.php", "", "private", "all", []fgs.Attribute{}, logg)
 
-var fileLocalMockGet = fgs.NewFileGs("../../testFiles/testPhpFile.php", "", "private", "get", []fgs.Attribute{}, logg)
-var fileLocalMockSet = fgs.NewFileGs("../../testFiles/testPhpFile.php", "", "private", "set", []fgs.Attribute{}, logg)
+var fileLocalMockGet = fgs.NewFileGs("../../testFiles/php/testPhpFile.php", "", "private", "get", []fgs.Attribute{}, logg)
+var fileLocalMockSet = fgs.NewFileGs("../../testFiles/php/testPhpFile.php", "", "private", "set", []fgs.Attribute{}, logg)
 
 var fileMock = fileMockTest{fileEntityMock}
 
