@@ -49,5 +49,5 @@ make run-file
 
 ### Run by cli:
 ```shell script
-make run run-cli path="your/path/here" fn="get" #you could use: get|set|all
+make run-cli path="your/path/here" fn="get" #you could use: get|set|all
 ```
