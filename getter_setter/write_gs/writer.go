@@ -7,7 +7,11 @@ import (
 	"github.com/marcos-dev88/go-getter-setter/getter_setter/logger"
 )
 
-const EmptyByteValue = 0
+const (
+	EmptyByteValue      = 0
+	EndOfPathFolder     = '/'
+	EnfOfFunctionGetSet = '}'
+)
 
 type (
 	Write interface {
@@ -32,6 +36,10 @@ func (w Writer) WriteGettersAndSetters() error {
 	}
 
 	err = removeLastBraces(w.Definition.File.Path)
+
+	if last := len(w.Definition.File.Path) - 1; last >= 0 && w.Definition.File.Path[last] == EndOfPathFolder {
+		return nil
+	}
 
 	file, err := os.OpenFile(w.Definition.File.Path, os.O_APPEND|os.O_RDWR, 0766)
 
@@ -82,9 +90,9 @@ func removeLastBraces(filePath string) error {
 
 	size := len(functionContent)
 
-	if size > 0 && functionContent[size-2] == '}' {
+	if size > 0 && functionContent[size-2] == EnfOfFunctionGetSet {
 		functionContent = functionContent[:size-2]
-	} else if size > 0 && functionContent[size-1] == '}' {
+	} else if size > 0 && functionContent[size-1] == EnfOfFunctionGetSet {
 		functionContent = functionContent[:size-1]
 	}
 

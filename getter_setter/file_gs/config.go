@@ -8,7 +8,8 @@ import (
 )
 
 const (
-	regexPHPSeven = `[\s\S]* (\S+)[\s\S]* =[\s\S]* (\S+)`
+	regexPHPSeven   = `[\s\S]* (\S+)[\s\S]* =[\s\S]* (\S+)`
+	EndOfPathFolder = '/'
 )
 
 type (
@@ -22,6 +23,10 @@ type (
 )
 
 func (f FileGs) GetFileAttributes() ([]byte, error) {
+	if last := len(f.Path) - 1; last >= 0 && f.Path[last] == EndOfPathFolder {
+		return nil, nil
+	}
+
 	file, err := os.Open(f.Path)
 
 	regexLang, err := choseRegexByLanguage(f.Language)
@@ -30,7 +35,7 @@ func (f FileGs) GetFileAttributes() ([]byte, error) {
 		return nil, err
 	}
 
-	var regexAttr = regexp.MustCompile(fmt.Sprintf(`%s%s`, f.Visibility, regexLang)) // Soon will have regex for each languange
+	var regexAttr = regexp.MustCompile(fmt.Sprintf(`%s%s`, f.Visibility, regexLang))
 
 	var attrByteArr = make([]byte, 2048)
 
@@ -64,6 +69,7 @@ func (f FileGs) GetFileAttributes() ([]byte, error) {
 func choseRegexByLanguage(language string) (string, error) {
 	regexLang := map[string]string{
 		"php":  regexPHPSeven,
+		"php7": regexPHPSeven,
 		"java": "",
 	}
 
