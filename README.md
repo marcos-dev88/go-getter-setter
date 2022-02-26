@@ -4,6 +4,10 @@
  * This is an open source project to generates both getters and setters to files that you can define for each language;
  * Today it supports PHP only, but, will support other languages in the future.
    
+## Language support:
+ > PHP 7
+
+<br>
 
 ### Requirements:
 ```shell script
@@ -37,7 +41,13 @@ docker-compose v1.25 or later.
         get -> only getters;
         set -> only setters;
 
-### Run application/instalation:
+## Run application/instalation:
+### Run by file:
 ```shell script
-make run
+make run-file
+```
+
+### Run by cli:
+```shell script
+make run run-cli path="your/path/here" fn="get (you could use: get|set|all )"
 ```
