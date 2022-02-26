@@ -18,8 +18,9 @@ const (
 )
 
 const (
-	GetterCheck = "getter"
-	SetterCheck = "setter"
+	GetterCheck     = "getter"
+	SetterCheck     = "setter"
+	EndOfPathFolder = '/'
 )
 
 type ValidateFunctionToGen interface {
@@ -62,6 +63,11 @@ func (d Definition) IsAlreadyCreatedFunc(funcType, fmtAttr string, functions map
 }
 
 func (d Definition) CheckWroteGettersAndSetters() (map[string][]string, error) {
+
+	if last := len(d.File.Path) - 1; last >= 0 && d.File.Path[last] == EndOfPathFolder {
+		return nil, nil
+	}
+
 	file, err := os.OpenFile(d.File.Path, os.O_APPEND|os.O_RDWR, 0766)
 
 	defer func(file *os.File) {
