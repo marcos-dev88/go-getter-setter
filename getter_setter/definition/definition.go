@@ -1,6 +1,7 @@
 package definition
 
 import (
+	"fmt"
 	"path/filepath"
 	"regexp"
 	"strings"
@@ -53,7 +54,14 @@ func (d Definition) GenFunctionGetAndSetByFileAndLang() ([]byte, error) {
 		"php": gsphp,
 	}
 
-	return languages[d.File.Language], nil
+	fmtLang, err := getLanguage(d.File.Language)
+
+	if err != nil {
+		d.Logger.NewLog("error", "err: ", err)
+		return nil, err
+	}
+
+	return languages[fmtLang], nil
 }
 
 func (d *Definition) DefineFileGsAttributes() error {
@@ -68,7 +76,7 @@ func (d *Definition) DefineFileGsAttributes() error {
 	var attrArr []fgs.Attribute
 
 	if err != nil {
-		d.Logger.NewLog("error", "err: ", err)
+		d.Logger.NewLog("error", err.Error(), err.Error())
 		return err
 
 	}
@@ -88,8 +96,22 @@ func (d *Definition) DefineFileGsAttributes() error {
 }
 
 func (d *Definition) DefineLanguageExtension() {
+	if len(d.File.Language) != 0 {
+		return
+	}
 	extFile := strings.Replace(filepath.Ext(d.File.Path), ".", "", -1)
 	if len(extFile) != 0 {
 		d.File.Language = extFile
 	}
+}
+
+func getLanguage(language string) (string, error) {
+	r := regexp.MustCompile(`[a-zA-Z]+`)
+
+	match := r.FindString(language)
+
+	if len(match) == 0 {
+		return "", fmt.Errorf("error: language is undefined")
+	}
+	return match, nil
 }
