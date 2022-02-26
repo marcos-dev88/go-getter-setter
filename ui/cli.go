@@ -14,9 +14,10 @@ import (
 )
 
 const (
-	GetterFunction string = "get"
-	SetterFunction string = "set"
-	AllFunctions   string = "all"
+	GetterFunction  string = "get"
+	SetterFunction  string = "set"
+	AllFunctions    string = "all"
+	EndOfPathFolder        = '/'
 )
 
 type (
@@ -47,7 +48,6 @@ func (c Cli) Generate() error {
 	}
 
 	err = json.Unmarshal(fileConfJson, &fileConf)
-
 	if err != nil {
 		if err != nil {
 			return err
@@ -55,23 +55,26 @@ func (c Cli) Generate() error {
 	}
 
 	for i := 0; i < len(fileConf.Files); i++ {
-		extFile := strings.Replace(filepath.Ext(fileConf.Files[i].Path), ".", "", -1)
-		fileConf.Files[i].Language = extFile
+		if len(fileConf.Files[i].Language) == 0 {
+			extFile := strings.Replace(filepath.Ext(fileConf.Files[i].Path), ".", "", -1)
+			fileConf.Files[i].Language = extFile
+		}
 	}
 
 	for i := 0; i < len(fileConf.Files); i++ {
-		if len(fileConf.Files[i].Language) == 0 {
+		strLen := len(fileConf.Files[i].Path)
+		if fileConf.Files[i].Path[strLen-1] == EndOfPathFolder {
 			err := getFileSliceByPath(fileConf.Files[i])
 			if err != nil {
 				return err
 			}
+
 		}
 	}
 
 	for i := 0; i < len(fileConf.Files); i++ {
 		if len(fileConf.Files[i].Path) > 0 && len(fileConf.Files[i].Language) > 0 {
 			co := di.NewContainer(fileConf.Files[i])
-
 			writer := co.GetWriter()
 
 			err := writer.WriteGettersAndSetters()
@@ -104,16 +107,23 @@ func (c Cli) GenerateCLI(path, functions string) error {
 
 func getFileSliceByPath(fileGs file_gs.FileGs) error {
 	var filesGs []file_gs.FileGs
+	pathStr := fileGs.Path
+	if last := len(pathStr) - 1; last >= 0 && pathStr[last] == EndOfPathFolder {
+		fileGs.Path = pathStr[:last]
+	}
 	filesInPath, _ := os.ReadDir(fileGs.Path)
 	for _, file := range filesInPath {
 		newPath := fileGs.Path + "/" + file.Name()
-		fileExt := strings.Replace(filepath.Ext(newPath), ".", "", -1)
-		fileGs.Language = fileExt
+		if len(fileGs.Language) == 0 {
+			fileExt := strings.Replace(filepath.Ext(newPath), ".", "", -1)
+			fileGs.Language = fileExt
+		}
 		filesGs = append(filesGs, file_gs.NewFileGs(newPath, fileGs.Language, fileGs.Visibility, fileGs.Functions, []file_gs.Attribute{}, nil))
 	}
 
 	for i := 0; i < len(filesGs); i++ {
-		if len(filesGs[i].Path) > 0 {
+		strLen := len(filesGs[i].Path)
+		if len(filesGs[i].Path) > 0 && filesGs[i].Path[strLen-1] != EndOfPathFolder {
 			co := di.NewContainer(filesGs[i])
 
 			writer := co.GetWriter()
@@ -123,6 +133,7 @@ func getFileSliceByPath(fileGs file_gs.FileGs) error {
 			if err != nil {
 				return err
 			}
+
 		}
 	}
 	return nil

@@ -30,7 +30,6 @@ func Test_Generate(t *testing.T) {
 		log.Printf("json -> %v", string(jsonData))
 
 		err = json.Unmarshal(jsonData, &resultFiles)
-
 		if err != nil {
 			cliMock.Log.NewLog("error", "error: ", err)
 		}
