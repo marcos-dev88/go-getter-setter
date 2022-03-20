@@ -3,12 +3,15 @@ package file_gs
 import (
 	"bufio"
 	"fmt"
+	"log"
 	"os"
 	"regexp"
+	"strings"
 )
 
 const (
 	regexPHPSeven   = `[\s\S]* (\S+)[\s\S]* =[\s\S]* (\S+)`
+	regexPHPEight   = `[\s\S]* (\S+)[\s\S]* (\S+);[\s\S]*`
 	EndOfPathFolder = '/'
 )
 
@@ -59,9 +62,16 @@ func (f FileGs) GetFileAttributes() ([]byte, error) {
 	for sc.Scan() {
 		attrMatch := regexAttr.FindStringSubmatch(sc.Text())
 		if attrMatch != nil {
-			attrByteArr = append(attrByteArr, []byte("var_name: "+attrMatch[1]+" - type: "+attrMatch[2]+"|")...)
+			switch strings.ToLower(f.Language) {
+			case "php7":
+				attrByteArr = append(attrByteArr, []byte("var_name: "+attrMatch[1]+" - type: "+attrMatch[2]+"|")...)
+			case "php8":
+				attrByteArr = append(attrByteArr, []byte("var_name: "+attrMatch[2]+" - type: "+attrMatch[1]+"|")...)
+			}
 		}
 	}
+
+	log.Printf("DEBUGGGG -> %s", string(attrByteArr))
 
 	return attrByteArr, nil
 }
@@ -70,6 +80,7 @@ func choseRegexByLanguage(language string) (string, error) {
 	regexLang := map[string]string{
 		"php":  regexPHPSeven,
 		"php7": regexPHPSeven,
+		"php8": regexPHPEight,
 		"java": "",
 	}
 
