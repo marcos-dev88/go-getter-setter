@@ -12,4 +12,13 @@ func Test_Writer(t *testing.T) {
 		}
 
 	})
+
+	t.Run("Test_Err_WrriterFunc", func(t *testing.T) {
+
+		err := writerEntityErrMock.WriteGettersAndSetters()
+
+		if err == nil {
+			t.Errorf("was expected an error here and %v given", err)
+		}
+	})
 }

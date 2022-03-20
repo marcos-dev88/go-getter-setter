@@ -16,8 +16,17 @@ var fileGsEntityMock = NewFileGs(
 )
 
 var fileGsEntityMockLocal = NewFileGs(
-	"../../testFiles/php/testPhpFile.php",
-	"php",
+	"../../testFiles/php/php7/testPhpFile.php",
+	"php7",
+	"private",
+	"all",
+	[]Attribute{NewAttribute("", "")},
+	logger.NewLogging(),
+)
+
+var fileGsEntityMockLocalEight = NewFileGs(
+	"../../testFiles/php/php8/myPhpEight.php",
+	"php8",
 	"private",
 	"all",
 	[]Attribute{NewAttribute("", "")},

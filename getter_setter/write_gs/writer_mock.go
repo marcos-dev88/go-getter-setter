@@ -15,25 +15,33 @@ type fileMockTest struct {
 	fgs.FileGs
 }
 
-var logg = logger.NewLogging()
+var (
+	logg = logger.NewLogging()
 
-var attrs = []fgs.Attribute{
-	fgs.NewAttribute("$Myvaribale", "string"),
-	fgs.NewAttribute("$my_varibale", "integer"),
-	fgs.NewAttribute("$my_amazing_varibale", "int"),
-	fgs.NewAttribute("$myOtherVaribale", "Boolean"),
-	fgs.NewAttribute("$TestVar", "double"),
-}
+	attrs = []fgs.Attribute{
+		fgs.NewAttribute("$Myvaribale", "string"),
+		fgs.NewAttribute("$my_varibale", "integer"),
+		fgs.NewAttribute("$my_amazing_varibale", "int"),
+		fgs.NewAttribute("$myOtherVaribale", "Boolean"),
+		fgs.NewAttribute("$TestVar", "double"),
+	}
 
-var fileEntityMock = fgs.NewFileGs("some/path", "php", "private", "all", attrs, logg)
-var fileLocalMock = fgs.NewFileGs("../../testFiles/php/testPhpFile.php", "php", "all", "private", []fgs.Attribute{}, logg)
+	fileEntityMock = fgs.NewFileGs("some/path", "php", "private", "all", attrs, logg)
+	fileLocalMock  = fgs.NewFileGs("../../testFiles/php/php7/testPhpFile.php", "php", "all", "private", []fgs.Attribute{}, logg)
 
-var fileMock = fileMockTest{fileEntityMock}
+	fileMock = fileMockTest{fileEntityMock}
+)
 
 type definitionMock struct {
 	def.FunctionDefinitionGetSet
 }
 
-var definitionEntityMockLocal = def.NewDefinition(fileLocalMock, logg)
+var (
+	definitionEntityMockLocal = def.NewDefinition(fileLocalMock, logg)
 
-var writerEntityMockLocale = NewWriter(definitionEntityMockLocal, logg)
+	writerEntityMockLocale = NewWriter(definitionEntityMockLocal, logg)
+
+	definitionsEntityErrLocal = def.NewDefinition(fileEntityMock, logg)
+
+	writerEntityErrMock = NewWriter(definitionsEntityErrLocal, logg)
+)

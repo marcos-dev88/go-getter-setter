@@ -19,4 +19,18 @@ func Test_FileReader(t *testing.T) {
 
 		log.Printf("\nattr: \n%v", string(attr))
 	})
+
+	t.Run("Test_GetFileAttr_PHP8", func(t *testing.T) {
+		attr, err := fileGsEntityMockLocalEight.GetFileAttributes()
+
+		if err != nil {
+			t.Errorf("error: %v", err)
+		}
+
+		if attr == nil {
+			t.Errorf("error: was expected an attribute here, and nil get")
+		}
+
+		log.Printf("\nattr: \n%v", string(attr))
+	})
 }
