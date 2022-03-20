@@ -2,6 +2,7 @@
 .vscode/
 .idea/
 bin/
+coverage/
 
 # Files
 .env
