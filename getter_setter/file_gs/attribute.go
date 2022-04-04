@@ -31,9 +31,16 @@ func formatSnakeCase(attribute string) (string, error) {
 
 	attributeSpaces := strings.Split(attribute, "_")
 
+	var attrCheck string
 	var attFinalName string
 
-	if len(attributeSpaces) == 0 {
+	for i := 0; i < len(attributeSpaces); i++ {
+		if attributeSpaces[i] != " " {
+			attrCheck += attributeSpaces[i]
+		}
+	}
+
+	if len(attrCheck) == 0 {
 		return "", fmt.Errorf("error: was expected an attribute here and nothing given")
 	}
 

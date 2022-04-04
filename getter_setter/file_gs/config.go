@@ -3,7 +3,6 @@ package file_gs
 import (
 	"bufio"
 	"fmt"
-	"log"
 	"os"
 	"regexp"
 	"strings"
@@ -32,9 +31,15 @@ func (f FileGs) GetFileAttributes() ([]byte, error) {
 
 	file, err := os.Open(f.Path)
 
+	if err != nil {
+		f.Logger.NewLog("error", "error: ", err)
+		return nil, err
+	}
+
 	regexLang, err := choseRegexByLanguage(f.Language)
 
 	if err != nil {
+		f.Logger.NewLog("error", "error: ", err)
 		return nil, err
 	}
 
@@ -52,11 +57,6 @@ func (f FileGs) GetFileAttributes() ([]byte, error) {
 		}
 	}(file)
 
-	if err != nil {
-		f.Logger.NewLog("error", "error: ", err)
-		return nil, err
-	}
-
 	sc := bufio.NewScanner(file)
 
 	for sc.Scan() {
@@ -71,9 +71,29 @@ func (f FileGs) GetFileAttributes() ([]byte, error) {
 		}
 	}
 
-	log.Printf("DEBUGGGG -> %s", string(attrByteArr))
+	if err := checkEmptyAttributes(string(attrByteArr)); err != nil {
+		f.Logger.NewLog("error", "error: ", err)
+		return nil, err
+	}
 
 	return attrByteArr, nil
+}
+
+func checkEmptyAttributes(attrStr string) error {
+	var out []byte
+
+	wthoutSpaces := strings.Replace(attrStr, " ", "", -1)
+
+	for i := 0; i < len(wthoutSpaces); i++ {
+		if wthoutSpaces[i] != 0 {
+			out = append(out, wthoutSpaces[i])
+		}
+	}
+	if len(string(out)) == 0 {
+		return fmt.Errorf("error: varname not found or not correct language version")
+	}
+
+	return nil
 }
 
 func choseRegexByLanguage(language string) (string, error) {

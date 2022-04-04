@@ -61,4 +61,12 @@ func Test_Attribute(t *testing.T) {
 
 	})
 
+	t.Run("Test Empty", func(t *testing.T) {
+		_, err := formatSnakeCase("_")
+
+		if err == nil {
+			log.Fatalf("was suppose to have an error here and nothing got")
+		}
+	})
+
 }
