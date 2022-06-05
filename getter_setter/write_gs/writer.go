@@ -10,7 +10,7 @@ import (
 const (
 	EmptyByteValue      = 0
 	EndOfPathFolder     = '/'
-	EnfOfFunctionGetSet = '}'
+	EndOfFunctionGetSet = '}'
 )
 
 type (
@@ -36,6 +36,10 @@ func (w Writer) WriteGettersAndSetters() error {
 	}
 
 	err = removeLastBraces(w.Definition.File.Path)
+
+	if err != nil {
+		return err
+	}
 
 	if last := len(w.Definition.File.Path) - 1; last >= 0 && w.Definition.File.Path[last] == EndOfPathFolder {
 		return nil
@@ -86,16 +90,21 @@ func removeLastBraces(filePath string) error {
 		return err
 	}
 
+	var bracesProsition []int
+
 	functionContent := string(in)
 
 	size := len(functionContent)
 
-	if size > 0 && functionContent[size-2] == EnfOfFunctionGetSet {
-		functionContent = functionContent[:size-2]
-	} else if size > 0 && functionContent[size-1] == EnfOfFunctionGetSet {
-		functionContent = functionContent[:size-1]
+	if size > 0 {
+		for i := 0; i < size; i++ {
+			if functionContent[i] == EndOfFunctionGetSet {
+				bracesProsition = append(bracesProsition, i)
+			}
+		}
 	}
 
+	functionContent = functionContent[:bracesProsition[len(bracesProsition)-1]-1]
 	err = os.WriteFile(filePath, []byte(functionContent), 0766)
 
 	if err != nil {
