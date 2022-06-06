@@ -104,7 +104,7 @@ func removeLastBraces(filePath string) error {
 		}
 	}
 
-	functionContent = functionContent[:bracesProsition[len(bracesProsition)-1]-1]
+	functionContent = functionContent[:bracesProsition[len(bracesProsition)-1]]
 	err = os.WriteFile(filePath, []byte(functionContent), 0766)
 
 	if err != nil {
