@@ -1,12 +1,14 @@
 {
     "files": [
         {
-            "path": "./testFiles",
+            "path": "./testFiles/php/php7/",
+			"language": "php7",
             "visibility": "private",
             "functions": "all"
         },
         {
-            "path": "./testFiles/testPhpFile.php",
+            "path": "./testFiles/php/php8/",
+			"language": "php8",
             "visibility": "private",
             "functions": "all"
         }

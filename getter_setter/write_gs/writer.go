@@ -47,6 +47,10 @@ func (w Writer) WriteGettersAndSetters() error {
 
 	file, err := os.OpenFile(w.Definition.File.Path, os.O_APPEND|os.O_RDWR, 0766)
 
+	if err != nil {
+		return err
+	}
+
 	defer func(file *os.File) {
 		err := file.Close()
 		if err != nil {
@@ -57,13 +61,19 @@ func (w Writer) WriteGettersAndSetters() error {
 		}
 	}(file)
 
-	generatedFuncs, err := w.Definition.GenFunctionGetAndSetByFileAndLang()
+	var generatedFuncs []byte
+
+	generatedFuncs, err = w.Definition.GenFunctionGetAndSetByFileAndLang()
+
+	if err != nil {
+		return err
+	}
+	_, err = file.Write(removeZeroByteVal(generatedFuncs))
 
 	if err != nil {
 		return err
 	}
 
-	_, err = file.Write(removeZeroByteVal(generatedFuncs))
 	_, err = file.Write([]byte("\n}"))
 
 	if err != nil {
