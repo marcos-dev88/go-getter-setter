@@ -77,7 +77,13 @@ func (c Cli) Generate() error {
 			co := di.NewContainer(fileConf.Files[i])
 			writer := co.GetWriter()
 
-			err := writer.WriteGettersAndSetters()
+			var err error
+
+			fInfo, _ := os.Stat(fileConf.Files[i].Path)
+
+			if !fInfo.IsDir() {
+				err = writer.WriteGettersAndSetters()
+			}
 
 			if err != nil {
 				return err
@@ -101,6 +107,10 @@ func (c Cli) GenerateCLI(path, functions string) error {
 	writer := co.GetWriter()
 
 	err = writer.WriteGettersAndSetters()
+
+	if err != nil {
+		return err
+	}
 
 	return nil
 }
