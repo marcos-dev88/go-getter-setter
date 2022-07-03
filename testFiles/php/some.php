@@ -8,9 +8,9 @@ class Some
 	 * 
 	 */
 
-	private   $muName = '';
+	private string  $muName = '';
 
-	private $myither = '';
+	private string $myither = '';
 
-	private $myuest = 0;
+	private int $myuest = 0;
 }
